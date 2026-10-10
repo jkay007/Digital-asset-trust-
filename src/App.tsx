@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ConfigWarning } from '@/components/layout/ConfigWarning';
 import HomePage from '@/pages/HomePage';
@@ -21,6 +21,10 @@ const ContactPage = lazy(() => import('@/pages/ContactPage'));
 const DisclaimerPage = lazy(() => import('@/pages/legal/DisclaimerPage'));
 const TermsPage = lazy(() => import('@/pages/legal/TermsPage'));
 const PrivacyPage = lazy(() => import('@/pages/legal/PrivacyPage'));
+const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
+const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPage'));
 
 export default function App() {
   return (
@@ -45,6 +49,12 @@ export default function App() {
           <Route path="legal/disclaimer" element={<DisclaimerPage />} />
           <Route path="legal/terms" element={<TermsPage />} />
           <Route path="legal/privacy" element={<PrivacyPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<Navigate to="/register/buyer" replace />} />
+          <Route path="register/buyer" element={<RegisterPage accountType="buyer" />} />
+          <Route path="register/seller" element={<RegisterPage accountType="seller" />} />
+          <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="reset-password" element={<ResetPasswordPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

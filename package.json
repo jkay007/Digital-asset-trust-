@@ -9,7 +9,9 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:local": "vite --mode localstack",
     "build": "tsc -b && vite build",
+    "build:local": "tsc -b && vite build --mode localstack",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "lint": "eslint .",

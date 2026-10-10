@@ -378,18 +378,20 @@ export type Database = {
         Update: never;
         Relationships: [];
       };
-      review_notes: {
+      staff_notes: {
         Row: {
           id: string;
           submission_id: string | null;
           asset_id: string | null;
-          author_id: string;
+          enquiry_id: string | null;
+          author_id: string | null;
           body: string;
           created_at: Timestamp;
         };
         Insert: {
           submission_id?: string | null;
           asset_id?: string | null;
+          enquiry_id?: string | null;
           body: string;
         };
         Update: never;
@@ -409,7 +411,6 @@ export type Database = {
           nda_requested: boolean;
           consent: boolean;
           status: EnquiryStatus;
-          internal_notes: string | null;
           handled_by: string | null;
           created_at: Timestamp;
           updated_at: Timestamp;
@@ -417,7 +418,6 @@ export type Database = {
         Insert: never;
         Update: {
           status?: EnquiryStatus;
-          internal_notes?: string | null;
         };
         Relationships: [
           {
@@ -574,9 +574,13 @@ export type Database = {
       };
     };
     Functions: {
-      has_role: {
-        Args: { _user_id: string; _role: AppRole };
-        Returns: boolean;
+      add_self_service_role: {
+        Args: { p_role: AppRole };
+        Returns: undefined;
+      };
+      withdraw_submission: {
+        Args: { p_submission_id: string };
+        Returns: undefined;
       };
       submit_enquiry: {
         Args: {
@@ -587,8 +591,8 @@ export type Database = {
           p_phone?: string | null;
           p_buyer_type?: string | null;
           p_message: string;
-          p_nda_requested?: boolean;
           p_consent: boolean;
+          p_nda_requested?: boolean;
         };
         Returns: string;
       };
@@ -669,3 +673,4 @@ export type VerificationRecord = Tables<'verification_records'>;
 export type AuditLog = Tables<'audit_logs'>;
 export type PageMetadata = Tables<'page_metadata'>;
 export type SubmissionDocument = Tables<'submission_documents'>;
+export type StaffNote = Tables<'staff_notes'>;

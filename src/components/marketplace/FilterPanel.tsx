@@ -110,8 +110,8 @@ export function FilterPanel({
       <FilterGroup legend="Price range (EUR equivalent)">
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label htmlFor={id('min')} className="sr-only">
-              Minimum price
+            <label htmlFor={id('min')} className="mb-1 block text-xs text-slate-500">
+              Minimum
             </label>
             <Select
               id={id('min')}
@@ -120,24 +120,24 @@ export function FilterPanel({
             >
               {PRICE_BANDS.map((b) => (
                 <option key={b.value} value={b.value}>
-                  {b.value === '0' ? 'Min: any' : `Min ${b.label}`}
+                  {b.value === '0' ? 'Any' : b.label}
                 </option>
               ))}
             </Select>
           </div>
           <div>
-            <label htmlFor={id('max')} className="sr-only">
-              Maximum price
+            <label htmlFor={id('max')} className="mb-1 block text-xs text-slate-500">
+              Maximum
             </label>
             <Select
               id={id('max')}
               value={filters.maxPrice != null ? String(filters.maxPrice) : ''}
               onChange={(e) => onChange({ maxPrice: e.target.value ? Number(e.target.value) : null })}
             >
-              <option value="">Max: any</option>
+              <option value="">Any</option>
               {PRICE_BANDS.filter((b) => b.value !== '0').map((b) => (
                 <option key={b.value} value={b.value}>
-                  Max {b.label}
+                  {b.label}
                 </option>
               ))}
             </Select>

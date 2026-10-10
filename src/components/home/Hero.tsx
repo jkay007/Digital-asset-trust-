@@ -25,7 +25,7 @@ export function Hero() {
         alt=""
         role="presentation"
         className="absolute inset-0 -z-20 h-full w-full object-cover object-bottom"
-        fetchPriority="high"
+        {...{ fetchpriority: "high" }}
       />
       <div
         aria-hidden="true"
