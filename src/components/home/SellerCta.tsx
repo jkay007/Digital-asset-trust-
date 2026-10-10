@@ -1,5 +1,6 @@
 import { Check } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 const POINTS = [
   'Anonymised listing: your company name is never published',
@@ -9,6 +10,7 @@ const POINTS = [
 ];
 
 export function SellerCta() {
+  const { user } = useAuth();
   return (
     <div className="on-dark relative overflow-hidden rounded-2xl bg-navy-900 px-6 py-12 text-white sm:px-12 sm:py-16">
       <div aria-hidden="true" className="absolute -right-24 -top-24 h-80 w-80 rounded-full border border-gold-400/20" />
@@ -24,7 +26,7 @@ export function SellerCta() {
             published until it has been approved.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink to="/dashboard/submissions/new" variant="gold" size="lg">
+            <ButtonLink to={user ? '/dashboard/submissions/new' : '/register/seller'} variant="gold" size="lg">
               Submit a confidential listing
             </ButtonLink>
             <ButtonLink to="/sell" variant="outline-light" size="lg">

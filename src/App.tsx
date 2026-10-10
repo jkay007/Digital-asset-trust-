@@ -26,6 +26,30 @@ const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPage'));
 
+const DashboardLayout = lazy(() => import('@/pages/dashboard/DashboardLayout'));
+const DashboardOverviewPage = lazy(() => import('@/pages/dashboard/DashboardOverviewPage'));
+const SavedListingsPage = lazy(() => import('@/pages/dashboard/SavedListingsPage'));
+const MyEnquiriesPage = lazy(() => import('@/pages/dashboard/MyEnquiriesPage'));
+const MandatesPage = lazy(() => import('@/pages/dashboard/MandatesPage'));
+const MandateDetailPage = lazy(() => import('@/pages/dashboard/MandateDetailPage'));
+const MandateFormPage = lazy(() => import('@/pages/dashboard/MandateFormPage'));
+const SubmissionsPage = lazy(() => import('@/pages/dashboard/SubmissionsPage'));
+const SubmissionFormPage = lazy(() => import('@/pages/dashboard/SubmissionFormPage'));
+const ProfilePage = lazy(() => import('@/pages/dashboard/ProfilePage'));
+
+const AdminLayout = lazy(() => import('@/pages/admin/AdminLayout'));
+const AdminOverviewPage = lazy(() => import('@/pages/admin/AdminOverviewPage'));
+const AdminSubmissionsPage = lazy(() => import('@/pages/admin/AdminSubmissionsPage'));
+const AdminSubmissionReviewPage = lazy(() => import('@/pages/admin/AdminSubmissionReviewPage'));
+const AdminListingsPage = lazy(() => import('@/pages/admin/AdminListingsPage'));
+const AdminListingPage = lazy(() => import('@/pages/admin/AdminListingPage'));
+const AdminVerificationPage = lazy(() => import('@/pages/admin/AdminVerificationPage'));
+const AdminEnquiriesPage = lazy(() => import('@/pages/admin/AdminEnquiriesPage'));
+const AdminMandatesPage = lazy(() => import('@/pages/admin/AdminMandatesPage'));
+const AdminUsersPage = lazy(() => import('@/pages/admin/AdminUsersPage'));
+const AdminAuditPage = lazy(() => import('@/pages/admin/AdminAuditPage'));
+const AdminMetadataPage = lazy(() => import('@/pages/admin/AdminMetadataPage'));
+
 export default function App() {
   return (
     <>
@@ -55,6 +79,35 @@ export default function App() {
           <Route path="register/seller" element={<RegisterPage accountType="seller" />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="reset-password" element={<ResetPasswordPage />} />
+
+          <Route path="dashboard" element={<DashboardLayout />}>
+            <Route index element={<DashboardOverviewPage />} />
+            <Route path="saved" element={<SavedListingsPage />} />
+            <Route path="enquiries" element={<MyEnquiriesPage />} />
+            <Route path="mandates" element={<MandatesPage />} />
+            <Route path="mandates/new" element={<MandateFormPage />} />
+            <Route path="mandates/:id" element={<MandateDetailPage />} />
+            <Route path="mandates/:id/edit" element={<MandateFormPage />} />
+            <Route path="submissions" element={<SubmissionsPage />} />
+            <Route path="submissions/new" element={<SubmissionFormPage />} />
+            <Route path="submissions/:id" element={<SubmissionFormPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+          </Route>
+
+          <Route path="admin" element={<AdminLayout />}>
+            <Route index element={<AdminOverviewPage />} />
+            <Route path="submissions" element={<AdminSubmissionsPage />} />
+            <Route path="submissions/:id" element={<AdminSubmissionReviewPage />} />
+            <Route path="listings" element={<AdminListingsPage />} />
+            <Route path="listings/:id" element={<AdminListingPage />} />
+            <Route path="verification" element={<AdminVerificationPage />} />
+            <Route path="enquiries" element={<AdminEnquiriesPage />} />
+            <Route path="mandates" element={<AdminMandatesPage />} />
+            <Route path="users" element={<AdminUsersPage />} />
+            <Route path="audit" element={<AdminAuditPage />} />
+            <Route path="metadata" element={<AdminMetadataPage />} />
+          </Route>
+
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
