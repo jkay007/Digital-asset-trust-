@@ -14,7 +14,7 @@ export default function ContactPage() {
         description="For enquiries about a specific listing, use the confidential enquiry form on the listing page so that it is linked to the correct opportunity."
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Contact' }]}
       />
-      <div className="container grid gap-6 py-12 sm:py-16 md:grid-cols-3">
+      <div className="container grid grid-cols-1 gap-6 py-12 sm:py-16 md:grid-cols-3">
         <div className="rounded-xl border border-slate-200 p-6 shadow-card">
           <Mail className="h-6 w-6 text-gold-600" aria-hidden="true" />
           <h2 className="mt-4 text-lg font-semibold">General enquiries</h2>

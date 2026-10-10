@@ -188,16 +188,16 @@ as $$
 declare
   missing text[] := '{}';
 begin
-  if char_length(coalesce(trim(s.title), '')) < 5 then missing := missing || 'a title of at least 5 characters'; end if;
-  if s.category_id is null then missing := missing || 'a category'; end if;
-  if s.jurisdiction_id is null then missing := missing || 'a jurisdiction'; end if;
-  if s.transaction_type is null then missing := missing || 'a transaction type'; end if;
-  if s.operating_status is null then missing := missing || 'an operating status'; end if;
-  if char_length(coalesce(trim(s.summary), '')) < 20 then missing := missing || 'a summary of at least 20 characters'; end if;
-  if not s.price_on_request and s.asking_price is null then missing := missing || 'an asking price or "price on request"'; end if;
-  if coalesce(trim(s.company_legal_name), '') = '' then missing := missing || 'the company legal name'; end if;
-  if coalesce(trim(s.contact_email), '') = '' then missing := missing || 'a contact email'; end if;
-  if not s.seller_declaration then missing := missing || 'the seller declaration'; end if;
+  if char_length(coalesce(trim(s.title), '')) < 5 then missing := array_append(missing, 'a title of at least 5 characters'); end if;
+  if s.category_id is null then missing := array_append(missing, 'a category'); end if;
+  if s.jurisdiction_id is null then missing := array_append(missing, 'a jurisdiction'); end if;
+  if s.transaction_type is null then missing := array_append(missing, 'a transaction type'); end if;
+  if s.operating_status is null then missing := array_append(missing, 'an operating status'); end if;
+  if char_length(coalesce(trim(s.summary), '')) < 20 then missing := array_append(missing, 'a summary of at least 20 characters'); end if;
+  if not s.price_on_request and s.asking_price is null then missing := array_append(missing, 'an asking price or "price on request"'); end if;
+  if coalesce(trim(s.company_legal_name), '') = '' then missing := array_append(missing, 'the company legal name'); end if;
+  if coalesce(trim(s.contact_email), '') = '' then missing := array_append(missing, 'a contact email'); end if;
+  if not s.seller_declaration then missing := array_append(missing, 'the seller declaration'); end if;
   if cardinality(missing) > 0 then
     raise exception 'Submission is incomplete. Please provide %.', array_to_string(missing, ', ')
       using errcode = '22023';

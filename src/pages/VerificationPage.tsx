@@ -62,7 +62,7 @@ export default function VerificationPage() {
       />
       <Section>
         <SectionHeading eyebrow="The four states" title="From unverified to documents reviewed" />
-        <ol className="grid gap-6 md:grid-cols-2">
+        <ol className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {VERIFICATION_LEVELS.map((level, i) => (
             <li key={level.value} className="rounded-xl border border-slate-200 bg-white p-6 shadow-card">
               <div className="flex items-center justify-between">
@@ -86,7 +86,7 @@ export default function VerificationPage() {
       </Section>
       <Section tone="slate">
         <SectionHeading eyebrow="Principles" title="Built so that verification cannot be overstated" />
-        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {PRINCIPLES.map(({ icon: Icon, title, body }) => (
             <li key={title} className="rounded-xl border border-slate-200 bg-white p-6">
               <Icon className="h-6 w-6 text-gold-600" aria-hidden="true" />
@@ -97,7 +97,7 @@ export default function VerificationPage() {
         </ul>
       </Section>
       <Section>
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <div className="rounded-xl border border-dashed border-violet-300 bg-violet-50 p-6">
             <h2 className="text-xl font-semibold text-violet-950">Demo listings</h2>
             <p className="mt-3 text-sm leading-relaxed text-violet-900">

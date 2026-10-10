@@ -17,7 +17,7 @@ export default function InsightsPage() {
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Insights' }]}
       />
       <div className="container py-12 sm:py-16">
-        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {insights.map((i) => (
             <li key={i.slug}>
               <InsightCard insight={i} />

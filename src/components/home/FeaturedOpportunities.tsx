@@ -22,7 +22,7 @@ export function FeaturedOpportunities() {
   }
 
   return (
-    <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {isLoading
         ? Array.from({ length: 6 }, (_, i) => (
             <li key={i}>

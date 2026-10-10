@@ -122,7 +122,7 @@ export default function RegisterPage({ accountType }: { accountType: 'buyer' | '
         <Field label="Work email" required error={errors.email?.message}>
           <Input type="email" autoComplete="email" {...register('email')} />
         </Field>
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="Company" error={errors.company_name?.message}>
             <Input autoComplete="organization" {...register('company_name')} />
           </Field>
@@ -130,7 +130,7 @@ export default function RegisterPage({ accountType }: { accountType: 'buyer' | '
             <Input autoComplete="organization-title" {...register('job_title')} />
           </Field>
         </div>
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="Country" error={errors.country?.message}>
             <Input autoComplete="country-name" {...register('country')} />
           </Field>

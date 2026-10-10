@@ -15,7 +15,7 @@ export function SellerCta() {
     <div className="on-dark relative overflow-hidden rounded-2xl bg-navy-900 px-6 py-12 text-white sm:px-12 sm:py-16">
       <div aria-hidden="true" className="absolute -right-24 -top-24 h-80 w-80 rounded-full border border-gold-400/20" />
       <div aria-hidden="true" className="absolute -right-10 -top-10 h-52 w-52 rounded-full border border-gold-400/30" />
-      <div className="relative grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
+      <div className="relative grid grid-cols-1 gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
         <div>
           <p className="eyebrow">For owners and shareholders</p>
           <h2 className="mt-3 text-3xl font-semibold leading-tight text-white sm:text-4xl">

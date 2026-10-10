@@ -18,13 +18,13 @@ export default function AdminOverviewPage() {
       {stats.error ? (
         <ErrorState error={stats.error} onRetry={() => stats.refetch()} />
       ) : !s ? (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[0, 1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-28 rounded-xl" />
           ))}
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard label="Awaiting review" value={(s.submissions.submitted ?? 0) + (s.submissions.under_review ?? 0)} hint="Submitted or under review" />
           <StatCard label="Approved, unpublished" value={s.assets.approved ?? 0} hint="Ready to publish" />
           <StatCard label="Published listings" value={s.assets.published ?? 0} />

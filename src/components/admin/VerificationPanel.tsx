@@ -19,6 +19,12 @@ const METHODS: Record<VerificationLevel, string> = {
   documents_reviewed: 'Review of corporate and regulatory documents supplied by the seller',
 };
 
+/** Midday on the chosen date, but never later than now (the database rejects future checks). */
+export function checkedAtFor(date: string, now = new Date()): string {
+  const chosen = new Date(`${date}T12:00:00Z`);
+  return (Number.isNaN(chosen.getTime()) || chosen > now ? now : chosen).toISOString();
+}
+
 interface VerificationPanelProps {
   assetId: string;
   current: VerificationLevel;
@@ -46,7 +52,7 @@ export function VerificationPanel({ assetId, current, verifiedAt, isDemo }: Veri
           method: method.trim(),
           source_reference: source.trim() || null,
           notes: notes.trim() || null,
-          checked_at: new Date(`${date}T12:00:00Z`).toISOString(),
+          checked_at: checkedAtFor(date),
         }),
       ),
     'Verification recorded',
@@ -82,7 +88,7 @@ export function VerificationPanel({ assetId, current, verifiedAt, isDemo }: Veri
       </p>
 
       <form onSubmit={submit} className="mt-5 space-y-4 rounded-lg border border-slate-200 bg-slate-50 p-4" noValidate>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Verification level" required>
             <Select
               value={level}

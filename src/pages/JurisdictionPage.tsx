@@ -27,7 +27,10 @@ export default function JurisdictionPage() {
     <>
       <Seo
         title={jurisdiction.seo_title || `Financial businesses and licences for sale in ${jurisdiction.name}`}
-        description={jurisdiction.seo_description || jurisdiction.description}
+        description={
+          jurisdiction.seo_description ||
+          `Regulated financial businesses and licences for sale in ${jurisdiction.name}. ${jurisdiction.description}`.slice(0, 300)
+        }
         path={path}
         jsonLd={breadcrumbJsonLd([
           { name: 'Home', path: '/' },

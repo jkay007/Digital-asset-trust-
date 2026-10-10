@@ -38,7 +38,7 @@ function MandateDetail() {
           </ButtonLink>
         }
       />
-      <dl className="grid gap-4 rounded-xl border border-slate-200 bg-white p-6 text-sm shadow-card sm:grid-cols-2">
+      <dl className="grid grid-cols-1 gap-4 rounded-xl border border-slate-200 bg-white p-6 text-sm shadow-card sm:grid-cols-2">
         <div>
           <dt className="text-slate-500">Categories</dt>
           <dd className="mt-0.5 font-medium">{names(mandate.category_ids, categories)}</dd>
@@ -91,7 +91,7 @@ function MandateDetail() {
           ) : matches.isLoading ? (
             <PageLoader label="Finding matches" />
           ) : matches.data && matches.data.length > 0 ? (
-            <ul className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3">
+            <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3">
               {matches.data.map((l) => (
                 <li key={l.id}>
                   <AssetCard listing={l} />

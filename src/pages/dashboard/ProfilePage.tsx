@@ -146,7 +146,7 @@ export default function ProfilePage() {
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5 rounded-xl border border-slate-200 bg-white p-6 shadow-card">
         <h2 className="text-lg font-semibold">Your details</h2>
         {serverError && <Notice tone="danger">{serverError}</Notice>}
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="Full name" required error={errors.full_name?.message}>
             <Input autoComplete="name" {...register('full_name')} />
           </Field>
@@ -192,7 +192,7 @@ export default function ProfilePage() {
         className="space-y-5 rounded-xl border border-slate-200 bg-white p-6 shadow-card"
       >
         <h2 className="text-lg font-semibold">Change password</h2>
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="New password" error={passwordForm.formState.errors.password?.message}>
             <Input type="password" autoComplete="new-password" {...passwordForm.register('password')} />
           </Field>

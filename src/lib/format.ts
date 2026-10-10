@@ -9,6 +9,7 @@ function formatter(cache: Map<string, Intl.NumberFormat>, currency: string, comp
       style: 'currency',
       currency,
       notation: compact ? 'compact' : 'standard',
+      minimumFractionDigits: 0,
       maximumFractionDigits: compact ? 1 : 0,
     });
     cache.set(key, f);

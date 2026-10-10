@@ -102,7 +102,7 @@ function Enquiries() {
                   </div>
                 </div>
                 {expanded && (
-                  <div className="grid gap-6 border-t border-slate-100 p-5 lg:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-6 border-t border-slate-100 p-5 lg:grid-cols-2">
                     <div className="space-y-3 text-sm">
                       <p className="flex items-center gap-2">
                         <Mail className="h-4 w-4 text-slate-400" aria-hidden="true" />

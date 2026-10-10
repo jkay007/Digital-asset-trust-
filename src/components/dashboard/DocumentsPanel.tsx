@@ -128,7 +128,7 @@ export function DocumentsPanel({ submissionId, editable }: DocumentsPanelProps) 
       )}
 
       {editable && (
-        <div className="mt-6 grid gap-4 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 sm:grid-cols-[200px_1fr_auto] sm:items-end">
+        <div className="mt-6 grid grid-cols-1 gap-4 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 sm:grid-cols-[200px_1fr_auto] sm:items-end">
           <Field label="Document type">
             <Select value={docType} onChange={(e) => setDocType(e.target.value as DocumentType)}>
               {DOCUMENT_TYPES.map((t) => (

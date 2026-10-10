@@ -13,7 +13,7 @@ export function CategoryGrid({ className }: { className?: string }) {
   if (error) return <ErrorState error={error} onRetry={() => refetch()} />;
 
   return (
-    <ul className={cn('grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5', className)}>
+    <ul className={cn('grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5', className)}>
       {isLoading
         ? Array.from({ length: 10 }, (_, i) => (
             <li key={i}>

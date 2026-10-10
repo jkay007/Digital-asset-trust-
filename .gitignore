@@ -29,3 +29,5 @@ blob-report
 *.log
 supabase/.branches
 supabase/.temp
+e2e/.auth
+public/sitemap.xml

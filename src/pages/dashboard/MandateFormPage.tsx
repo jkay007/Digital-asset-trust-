@@ -162,7 +162,7 @@ function MandateForm() {
             <fieldset>
               <legend className="text-sm font-medium text-navy-800">Categories</legend>
               <p className="mb-2 text-xs text-slate-500">Leave empty for any category.</p>
-              <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {categories?.map((c) => (
                   <label key={c.id} className="flex items-center gap-2.5 text-sm text-slate-700">
                     <Checkbox checked={field.value.includes(c.id)} onChange={() => field.onChange(toggle(field.value, c.id))} />
@@ -185,7 +185,7 @@ function MandateForm() {
                 {regions.map(([region, list]) => (
                   <div key={region}>
                     <p className="mb-1.5 mt-2 text-xs font-semibold uppercase tracking-wider text-slate-500 first:mt-0">{region}</p>
-                    <div className="grid gap-2 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                       {list.map((j) => (
                         <label key={j.id} className="flex items-center gap-2.5 text-sm text-slate-700">
                           <Checkbox checked={field.value.includes(j.id)} onChange={() => field.onChange(toggle(field.value, j.id))} />
@@ -206,7 +206,7 @@ function MandateForm() {
           render={({ field }) => (
             <fieldset>
               <legend className="mb-2 text-sm font-medium text-navy-800">Transaction types</legend>
-              <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {TRANSACTION_TYPES.map((t) => (
                   <label key={t.value} className="flex items-center gap-2.5 text-sm text-slate-700">
                     <Checkbox checked={field.value.includes(t.value)} onChange={() => field.onChange(toggle(field.value, t.value))} />
@@ -218,7 +218,7 @@ function MandateForm() {
           )}
         />
 
-        <div className="grid gap-5 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
           <Field label="Minimum budget" error={errors.min_budget?.message}>
             <Input inputMode="decimal" {...register('min_budget')} />
           </Field>
@@ -234,7 +234,7 @@ function MandateForm() {
           </Field>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="Timeline">
             <Select {...register('timeline')}>
               <option value="">Select…</option>

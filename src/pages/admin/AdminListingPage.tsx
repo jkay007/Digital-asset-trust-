@@ -83,7 +83,7 @@ function ExistingListing({ id }: { id: string }) {
         <h2 id="lifecycle-heading" className="text-lg font-semibold">
           Publication
         </h2>
-        <dl className="mt-2 grid gap-x-6 gap-y-1 text-xs text-slate-500 sm:grid-cols-4">
+        <dl className="mt-2 grid grid-cols-1 gap-x-6 gap-y-1 text-xs text-slate-500 sm:grid-cols-4">
           <div>
             <dt className="inline">Approved: </dt>
             <dd className="inline">{formatDateTime(asset.approved_at)}</dd>
@@ -115,7 +115,7 @@ function ExistingListing({ id }: { id: string }) {
         )}
       </section>
 
-      <div className="grid gap-6 2xl:grid-cols-[1fr_380px]">
+      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[1fr_380px]">
         <div className="space-y-6">
           <ListingContentForm asset={asset} readOnly={!isAdmin} submitLabel="Save content" onSave={(p) => update.mutateAsync(p)} />
           <PrivateDetailsPanel assetId={asset.id} canEdit={isAdmin} />

@@ -14,7 +14,7 @@ export default function SavedListingsPage() {
       {error ? (
         <ErrorState error={error} onRetry={() => refetch()} />
       ) : isLoading ? (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <AssetCardSkeleton />
           <AssetCardSkeleton />
         </div>
@@ -26,7 +26,7 @@ export default function SavedListingsPage() {
           action={<ButtonLink to="/marketplace">Browse the marketplace</ButtonLink>}
         />
       ) : (
-        <ul className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3">
           {data.map((row) =>
             row.listing ? (
               <li key={row.assetId}>

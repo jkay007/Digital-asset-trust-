@@ -28,7 +28,7 @@ const PILLARS = [
 
 export function TrustSection() {
   return (
-    <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+    <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
       <div>
         <p className="eyebrow">Trust &amp; verification</p>
         <h2 className="mt-3 text-3xl font-semibold leading-tight sm:text-[2.35rem]">
@@ -58,7 +58,7 @@ export function TrustSection() {
           How verification works <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </div>
-      <ul className="grid gap-5 self-start sm:grid-cols-2">
+      <ul className="grid grid-cols-1 gap-5 self-start sm:grid-cols-2">
         {PILLARS.map(({ icon: Icon, title, body }) => (
           <li key={title} className="rounded-xl border border-slate-200 bg-white p-6 shadow-card">
             <Icon className="h-6 w-6 text-gold-600" aria-hidden="true" />

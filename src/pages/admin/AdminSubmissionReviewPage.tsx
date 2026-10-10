@@ -127,7 +127,7 @@ export default function AdminSubmissionReviewPage() {
         </Notice>
       )}
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_360px]">
         <div className="space-y-6">
           <SubmissionSummary submission={s} />
           <DocumentsPanel submissionId={s.id} editable={false} />

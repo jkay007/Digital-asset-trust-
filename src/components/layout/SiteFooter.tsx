@@ -12,7 +12,7 @@ export function SiteFooter() {
         Footer
       </h2>
       <div className="container py-16">
-        <div className="grid gap-12 lg:grid-cols-[1.2fr_2fr]">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_2fr]">
           <div className="max-w-sm space-y-5">
             <Logo />
             <p className="text-sm leading-relaxed text-white/65">{site.tagline}. Discreet introductions between qualified buyers and owners of regulated financial businesses.</p>
@@ -50,7 +50,7 @@ export function SiteFooter() {
 
         <div className="mt-14 border-t border-white/10 pt-8">
           <h3 className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Important notice</h3>
-          <ul className="mt-3 grid gap-2 text-xs leading-relaxed text-white/50 md:grid-cols-2">
+          <ul className="mt-3 grid grid-cols-1 gap-2 text-xs leading-relaxed text-white/50 md:grid-cols-2">
             {DISCLAIMER_POINTS.map((p) => (
               <li key={p}>{p}</li>
             ))}

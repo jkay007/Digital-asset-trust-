@@ -28,7 +28,7 @@ export default function DashboardOverviewPage() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Saved listings" value={saved.data?.length ?? '–'} />
         <StatCard label="Enquiries sent" value={enquiries.data?.length ?? '–'} />
         {hasRole('buyer') && (
@@ -37,7 +37,7 @@ export default function DashboardOverviewPage() {
         {hasRole('seller') && <StatCard label="Submissions" value={submissions.data?.length ?? '–'} />}
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-card" aria-labelledby="quick-actions">
           <h2 id="quick-actions" className="text-lg font-semibold">
             Quick actions

@@ -159,7 +159,7 @@ export function MarketplaceBrowser({ lockedCategory, lockedJurisdiction, cardHea
   );
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[280px_1fr] xl:gap-10">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr] xl:gap-10">
       <aside aria-label="Filters" className="hidden lg:block">
         <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-xl border border-slate-200 bg-white p-5 shadow-card">
           <h2 className="mb-5 font-display text-lg font-semibold">Refine results</h2>
@@ -250,7 +250,7 @@ export function MarketplaceBrowser({ lockedCategory, lockedJurisdiction, cardHea
           {error ? (
             <ErrorState error={error} onRetry={() => refetch()} />
           ) : isLoading ? (
-            <ul className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3" aria-busy="true">
+            <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3" aria-busy="true">
               {Array.from({ length: 6 }, (_, i) => (
                 <li key={i}>
                   <AssetCardSkeleton />
@@ -258,7 +258,7 @@ export function MarketplaceBrowser({ lockedCategory, lockedJurisdiction, cardHea
               ))}
             </ul>
           ) : data && data.rows.length > 0 ? (
-            <ul className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3">
+            <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3">
               {data.rows.map((listing) => (
                 <li key={listing.id}>
                   <AssetCard listing={listing} headingLevel={cardHeading} />

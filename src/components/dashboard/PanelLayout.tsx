@@ -22,7 +22,7 @@ interface PanelLayoutProps {
 export function PanelLayout({ eyebrow, title, nav, aside }: PanelLayoutProps) {
   return (
     <div className="bg-slate-50">
-      <div className="container grid gap-8 py-8 lg:grid-cols-[240px_1fr] lg:py-12">
+      <div className="container grid grid-cols-1 gap-8 py-8 lg:grid-cols-[240px_1fr] lg:py-12">
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <p className="eyebrow">{eyebrow}</p>
           <p className="mt-1 font-display text-xl font-semibold">{title}</p>

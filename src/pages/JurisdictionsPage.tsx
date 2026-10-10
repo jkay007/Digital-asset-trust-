@@ -35,7 +35,7 @@ export default function JurisdictionsPage() {
         {error ? (
           <ErrorState error={error} onRetry={() => refetch()} />
         ) : isLoading ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 9 }, (_, i) => (
               <Skeleton key={i} className="h-24 rounded-xl" />
             ))}
@@ -47,7 +47,7 @@ export default function JurisdictionsPage() {
                 <h2 id={`region-${region}`} className="text-2xl font-semibold">
                   {region}
                 </h2>
-                <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <ul className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {list.map((j) => {
                     const count = counts?.byJurisdiction.get(j.id) ?? 0;
                     return (

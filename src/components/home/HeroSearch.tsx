@@ -34,7 +34,7 @@ export function HeroSearch({ className }: { className?: string }) {
       aria-label="Search opportunities"
       onSubmit={onSubmit}
       className={cn(
-        'grid gap-1 rounded-xl bg-white p-1.5 shadow-lift ring-1 ring-black/5 md:grid-cols-[1.6fr_1fr_1fr_auto] md:gap-0',
+        'grid grid-cols-1 gap-1 rounded-xl bg-white p-1.5 shadow-lift ring-1 ring-black/5 md:grid-cols-[1.6fr_1fr_1fr_auto] md:gap-0',
         className,
       )}
     >

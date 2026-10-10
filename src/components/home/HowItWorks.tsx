@@ -38,7 +38,7 @@ function Steps({ heading, steps }: { heading: string; steps: { title: string; bo
 
 export function HowItWorks() {
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <Steps heading="For buyers" steps={BUYER_STEPS} />
       <Steps heading="For sellers" steps={SELLER_STEPS} />
     </div>

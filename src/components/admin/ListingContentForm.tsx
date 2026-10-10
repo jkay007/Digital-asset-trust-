@@ -144,7 +144,7 @@ export function ListingContentForm({ asset, readOnly, submitLabel, onSave }: Lis
         <Field label="Description" error={errors.description?.message} hint="Blank lines separate paragraphs. Never include identifying details.">
           <Textarea rows={6} {...register('description')} />
         </Field>
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="Category" required error={errors.category_id?.message}>
             <Select {...register('category_id')}>
               <option value="">Select…</option>
@@ -186,7 +186,7 @@ export function ListingContentForm({ asset, readOnly, submitLabel, onSave }: Lis
             </Select>
           </Field>
         </div>
-        <div className="grid gap-5 sm:grid-cols-[1fr_140px]">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-[1fr_140px]">
           <Field label="Asking price" error={errors.asking_price?.message}>
             <Input inputMode="decimal" disabled={por} {...register('asking_price')} />
           </Field>
@@ -201,7 +201,7 @@ export function ListingContentForm({ asset, readOnly, submitLabel, onSave }: Lis
         <CheckboxField label="Price on request">
           <Checkbox {...register('price_on_request')} />
         </CheckboxField>
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="Licence / authorisation">
             <Input {...register('licence_type')} />
           </Field>
@@ -224,7 +224,7 @@ export function ListingContentForm({ asset, readOnly, submitLabel, onSave }: Lis
         <Field label="Highlights" hint="One per line.">
           <Textarea rows={3} {...register('highlights')} />
         </Field>
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="SEO title" hint="Optional; defaults to the listing title.">
             <Input {...register('seo_title')} />
           </Field>

@@ -62,7 +62,7 @@ export function PrivateDetailsPanel({ assetId, canEdit }: { assetId: string; can
             save.mutate(undefined);
           }}
         >
-          <fieldset disabled={!canEdit} className="grid gap-4 sm:grid-cols-2">
+          <fieldset disabled={!canEdit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {FIELDS.map(([key, label]) => (
               <Field key={key} label={label}>
                 <Input value={values[key] ?? ''} onChange={(e) => setValues((v) => ({ ...v, [key]: e.target.value }))} />

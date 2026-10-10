@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, 'claude/**']
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, typecheck, unit tests, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+        env:
+          VITE_SUPABASE_URL: https://example.supabase.co
+          VITE_SUPABASE_ANON_KEY: ci-placeholder-anon-key
+          VITE_SITE_URL: https://www.example.com
+
+  integration:
+    name: Security and end-to-end tests (local Supabase stack)
+    runs-on: ubuntu-latest
+    needs: checks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Cache stack binaries and Storage API build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .local-stack/bin
+            .local-stack/auth-dist
+            .local-stack/storage-api
+            .local-stack/deno-cache
+          key: local-stack-${{ hashFiles('scripts/local-stack/up.sh') }}
+      - name: Start local stack (Postgres, Auth, PostgREST, Storage, Edge Function)
+        run: npm run stack:up -- --reset
+      - name: Database and API security tests
+        run: npm run test:security
+      - run: npx playwright install --with-deps chromium
+      - name: End-to-end, accessibility and mobile tests
+        run: npm run test:e2e
+        env:
+          CI: 'true'
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            .local-stack/logs

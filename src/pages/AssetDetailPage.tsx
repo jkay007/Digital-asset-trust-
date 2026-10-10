@@ -44,7 +44,7 @@ function DetailSkeleton() {
           <Skeleton className="h-5 w-1/2 bg-white/10" />
         </div>
       </div>
-      <div className="container grid gap-10 py-12 lg:grid-cols-[1fr_380px]">
+      <div className="container grid grid-cols-1 gap-10 py-12 lg:grid-cols-[1fr_380px]">
         <div className="space-y-4">
           <Skeleton className="h-6 w-40" />
           <Skeleton className="h-24 w-full" />
@@ -138,7 +138,7 @@ export default function AssetDetailPage() {
               <p className="mt-4 max-w-3xl text-lg leading-relaxed text-white/70">{listing.summary}</p>
             </div>
           </div>
-          <dl className="mt-10 grid gap-6 border-t border-white/10 pt-6 sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="mt-10 grid grid-cols-1 gap-6 border-t border-white/10 pt-6 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <dt className="text-xs uppercase tracking-wider text-white/50">Jurisdiction</dt>
               <dd className="mt-1 flex items-center gap-1.5 font-medium">
@@ -177,7 +177,7 @@ export default function AssetDetailPage() {
           </Notice>
         )}
 
-        <div className="grid gap-10 lg:grid-cols-[1fr_380px] xl:gap-14">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_380px] xl:gap-14">
           <div className="min-w-0 space-y-12">
             <section aria-labelledby="overview-heading">
               <h2 id="overview-heading" className="text-2xl font-semibold">
@@ -187,7 +187,7 @@ export default function AssetDetailPage() {
                 {description.length > 0 ? description.map((p, i) => <p key={i}>{p}</p>) : <p>{listing.summary}</p>}
               </div>
               {listing.highlights.length > 0 && (
-                <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+                <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {listing.highlights.map((h) => (
                     <li key={h} className="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
                       <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" aria-hidden="true" />
@@ -231,7 +231,7 @@ export default function AssetDetailPage() {
                   Included in the transaction
                 </h2>
                 <p className="mt-2 text-sm text-slate-500">As described by the seller; subject to confirmation in due diligence.</p>
-                <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
+                <ul className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                   {listing.included_assets.map((item) => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-slate-700">
                       <FileText className="mt-0.5 h-4 w-4 shrink-0 text-navy-400" aria-hidden="true" />
@@ -330,7 +330,7 @@ export default function AssetDetailPage() {
           {related.error ? (
             <ErrorState className="mt-6" error={related.error} onRetry={() => related.refetch()} />
           ) : related.data && related.data.length > 0 ? (
-            <ul className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {related.data.map((r) => (
                 <li key={r.id}>
                   <AssetCard listing={r} />
@@ -338,7 +338,7 @@ export default function AssetDetailPage() {
               ))}
             </ul>
           ) : related.isLoading ? (
-            <div className="mt-6 grid gap-6 md:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
               {[0, 1, 2].map((i) => (
                 <Skeleton key={i} className="h-72 rounded-xl" />
               ))}

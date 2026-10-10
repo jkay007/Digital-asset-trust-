@@ -27,7 +27,7 @@ export function InsightCard({ insight }: { insight: (typeof insights)[number] })
 
 export function InsightsPreview() {
   return (
-    <ul className="grid gap-6 md:grid-cols-3">
+    <ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
       {insights.slice(0, 3).map((insight) => (
         <li key={insight.slug}>
           <InsightCard insight={insight} />

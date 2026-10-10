@@ -56,7 +56,7 @@ export default function SellPage() {
       </PageHeader>
       <Section>
         <SectionHeading eyebrow="Process" title="From submission to introduction" />
-        <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ol className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {STEPS.map((s, i) => (
             <li key={s.title} className="rounded-xl border border-slate-200 bg-white p-6 shadow-card">
               <span className="font-display text-2xl font-semibold text-gold-600 tabular">{String(i + 1).padStart(2, '0')}</span>
@@ -67,7 +67,7 @@ export default function SellPage() {
         </ol>
       </Section>
       <Section tone="slate">
-        <div className="grid gap-12 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
           <div>
             <p className="eyebrow">Preparation</p>
             <h2 className="mt-3 text-3xl font-semibold">What you will need</h2>
@@ -80,7 +80,7 @@ export default function SellPage() {
               ))}
             </ul>
           </div>
-          <ul className="grid gap-5 self-start sm:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-5 self-start sm:grid-cols-2">
             {[
               { icon: EyeOff, title: 'Anonymised', body: 'Public listings never show your company name, registration or licence numbers.' },
               { icon: FileLock2, title: 'Private documents', body: 'Documents sit in private storage with access limited to you and authorised reviewers.' },

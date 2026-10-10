@@ -363,7 +363,7 @@ function SubmissionEditor() {
             <Field label="Listing title" required error={errors.title?.message} hint="Describe the business without naming it, e.g. “Authorised EMI with EU passporting”.">
               <Input {...register('title')} />
             </Field>
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Category" required error={errors.category_id?.message}>
                 <Select {...register('category_id')}>
                   <option value="">Select…</option>
@@ -394,7 +394,7 @@ function SubmissionEditor() {
           </Section>
 
           <Section title="2. Deal structure">
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Transaction type" required error={errors.transaction_type?.message}>
                 <Select {...register('transaction_type')}>
                   <option value="">Select…</option>
@@ -416,7 +416,7 @@ function SubmissionEditor() {
                 </Select>
               </Field>
             </div>
-            <div className="grid gap-5 sm:grid-cols-[1fr_140px]">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-[1fr_140px]">
               <Field label="Asking price" required={!por} error={errors.asking_price?.message}>
                 <Input inputMode="decimal" disabled={por} {...register('asking_price')} />
               </Field>
@@ -431,7 +431,7 @@ function SubmissionEditor() {
             <CheckboxField label="Price on request (the asking price will not be shown)">
               <Checkbox {...register('price_on_request')} />
             </CheckboxField>
-            <div className="grid gap-5 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
               <Field label="Year established" error={errors.year_established?.message}>
                 <Input inputMode="numeric" maxLength={4} {...register('year_established')} />
               </Field>
@@ -455,7 +455,7 @@ function SubmissionEditor() {
           </Section>
 
           <Section title="3. Licence and regulator">
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Licence / authorisation type" error={errors.licence_type?.message}>
                 <Input {...register('licence_type')} />
               </Field>
@@ -482,7 +482,7 @@ function SubmissionEditor() {
           </Section>
 
           <Section title="5. Confidential details" description="Never shown on the listing. Used only by our reviewers.">
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Company legal name" required error={errors.company_legal_name?.message}>
                 <Input {...register('company_legal_name')} />
               </Field>
@@ -493,7 +493,7 @@ function SubmissionEditor() {
             <Field label="Reason for sale" error={errors.reason_for_sale?.message}>
               <Textarea rows={3} {...register('reason_for_sale')} />
             </Field>
-            <div className="grid gap-5 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
               <Field label="Contact name" error={errors.contact_name?.message}>
                 <Input autoComplete="name" {...register('contact_name')} />
               </Field>

@@ -38,7 +38,7 @@ export function Seo({ title, description, path, image, noindex, jsonLd }: SeoPro
   const resolvedTitle = override?.title || title;
   const fullTitle = resolvedTitle ? `${resolvedTitle} | ${site.name}` : `${site.name} | ${site.tagline}`;
   const resolvedDescription = override?.description || description || site.description;
-  const resolvedImage = override?.og_image_url || image;
+  const resolvedImage = override?.og_image_url || image || `${site.url}/og-image.png`;
   const robots = override?.noindex || noindex ? 'noindex, nofollow' : 'index, follow';
   const canonical = site.url ? `${site.url}${pathname === '/' ? '' : pathname}` : undefined;
 
@@ -51,7 +51,7 @@ export function Seo({ title, description, path, image, noindex, jsonLd }: SeoPro
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={resolvedDescription} />
       {canonical && <meta property="og:url" content={canonical} />}
-      {resolvedImage && <meta property="og:image" content={resolvedImage} />}
+      <meta property="og:image" content={resolvedImage} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={resolvedDescription} />
       {jsonLd && <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>}
