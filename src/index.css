@@ -1,0 +1,65 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/source-serif-4';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-white font-sans text-navy-900;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight text-navy-900;
+  }
+  ::selection {
+    @apply bg-gold-200 text-navy-900;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-gold-500 ring-offset-2 ring-offset-white;
+  }
+  .on-dark :focus-visible {
+    @apply ring-offset-navy-900;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-eyebrow uppercase text-gold-700;
+  }
+  .on-dark .eyebrow,
+  .eyebrow-on-dark {
+    @apply text-gold-400;
+  }
+  .gold-rule {
+    @apply h-px w-full bg-gold-rule;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-navy-900 focus:px-4 focus:py-2 focus:text-white;
+  }
+  .card-surface {
+    @apply rounded-xl border border-slate-200 bg-white shadow-card;
+  }
+}
