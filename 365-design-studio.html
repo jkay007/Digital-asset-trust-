@@ -58,7 +58,7 @@ h2{font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.06e
 
 .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
 .bar label,.f label{font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;display:flex;flex-direction:column;gap:2px}
-input[type=number],input[type=text],textarea{border:1px solid var(--line);background:var(--bg);border-radius:4px;padding:5px 7px;width:100%;font-variant-numeric:tabular-nums}
+input[type=number],input[type=text],textarea,select{border:1px solid var(--line);background:var(--bg);border-radius:4px;padding:5px 7px;width:100%;font-variant-numeric:tabular-nums}
 .bar input[type=number]{width:74px}
 .bar .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 #stage{background:var(--stage);border-radius:4px;overflow:hidden;position:relative}
@@ -116,7 +116,7 @@ pre{white-space:pre-wrap;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;
     <h2>Add to plan</h2>
     <div class="cats" id="cats"></div>
     <div class="items" id="items"></div>
-    <p class="hint">Tap an item to drop it on the plot, then drag it into place.</p>
+    <p class="hint">Tap an item to drop it on the plot, then drag it into place. Select a surface to change its shape, material, laying pattern and slab size.</p>
   </aside>
 
   <section class="panel">
@@ -142,6 +142,11 @@ pre{white-space:pre-wrap;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;
           <label for="iw">Width (m)<input id="iw" type="number" min="0.2" step="0.1"></label>
           <label for="ih">Depth (m)<input id="ih" type="number" min="0.2" step="0.1"></label>
           <label for="ir">Turn (°)<input id="ir" type="number" step="15"></label>
+        </div>
+        <div class="f">
+          <label class="wide" for="ish">Shape<select id="ish"></select></label>
+          <label class="wide" for="ist"><span id="stlab">Style</span><select id="ist"></select></label>
+          <label class="wide" for="isz">Slab size<select id="isz"></select></label>
         </div>
         <div id="finwrap"><div class="hint" style="margin:0" id="finname">Finish</div><div class="sw" id="fin"></div></div>
         <div class="row">
@@ -195,10 +200,10 @@ function R(seed){let a=seed|0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>
 
 /* ---------- finishes ---------- */
 const ROOF=[['Anthracite','#4b5059'],['Terracotta tile','#b5603c'],['White render','#e6e3dc'],['Sand','#c9b48f'],['Cedar','#96683f']];
-const STONE=[['Travertine','#dccfb6'],['Grey porcelain','#a9adb1'],['Terracotta','#c58a63'],['Limestone','#ece6d8']];
+const STONE=[['Travertine','#dccfb6'],['Grey porcelain','#a9adb1'],['Terracotta','#c58a63'],['Limestone','#ece6d8'],['Sandstone','#d7b98a'],['Slate','#6a727a'],['Basalt','#4a4f55'],['Red brick','#a9583f']];
 const WOOD=[['Teak','#a8794c'],['Weathered grey','#9a968f'],['Dark walnut','#6b4a33']];
-const GRASS=[['Lawn','#7fae5a'],['Drought-tolerant mix','#9db06a'],['Artificial turf','#5fa155']];
-const GRAVEL=[['Pale gravel','#d6d0c4'],['Grey chippings','#a5a6a6'],['Red gravel','#bf8f76']];
+const GRASS=[['Lawn','#7fae5a'],['Drought-tolerant mix','#9db06a'],['Artificial turf','#5fa155'],['Clover lawn','#6c9f4c'],['Dry meadow','#b5ad68']];
+const GRAVEL=[['Pale gravel','#d6d0c4'],['Grey chippings','#a5a6a6'],['Red gravel','#bf8f76'],['White marble','#ecebe6'],['Golden gravel','#d2b77c'],['Slate chips','#666d76']];
 const CAR=[['Silver','#b9bec5'],['White','#f1f1ef'],['Black','#2b2e33'],['Blue','#3d5f8f'],['Red','#a83232']];
 const BLOOM=[['Mixed','#d9567a'],['Lavender','#8d79c9'],['White','#f4f1e8'],['Bougainvillea','#c7307e'],['Yellow','#e3b62f']];
 const TILE=[['Aqua','#5cc0d6'],['Deep blue','#2f7fb8'],['Lagoon green','#55b8a2']];
@@ -295,6 +300,72 @@ const K={
  solar:{n:'Solar panels',cat:'Features',w:3.4,h:1.7,d(c,w,h){c.fillStyle='#1f3559';c.fillRect(-w/2,-h/2,w,h);tiles(c,w,h,.85,'#c7d0dc');c.strokeStyle='#c7d0dc';c.lineWidth=.05;c.strokeRect(-w/2,-h/2,w,h)}},
  image:{n:'Your picture',cat:null,w:4,h:3,d(c,w,h,col,rnd,it){const im=imgEl(it.img);if(im&&im.complete&&im.naturalWidth)c.drawImage(im,-w/2,-h/2,w,h);else{c.fillStyle='#c9ced4';c.fillRect(-w/2,-h/2,w,h);c.strokeStyle='#8a929b';c.lineWidth=.04;c.strokeRect(-w/2,-h/2,w,h);c.beginPath();c.moveTo(-w/2,-h/2);c.lineTo(w/2,h/2);c.moveTo(w/2,-h/2);c.lineTo(-w/2,h/2);c.stroke()}}}
 };
+
+/* ---------- surface shapes, laying patterns and slab sizes ---------- */
+const SHAPES=['Rectangle','Rounded','Circle / oval','L-shape','Curved','Triangle','Half-circle'],AF=[1,.97,.785,.75,.72,.5,.785];
+const SZ=[['30 × 30 cm',.3,.3],['45 × 45 cm',.45,.45],['60 × 60 cm',.6,.6],['60 × 90 cm',.9,.6],['90 × 90 cm',.9,.9],['60 × 120 cm',1.2,.6]];
+const PAT=['Grid','Brick bond','Herringbone','Crazy paving','Cobble setts'];
+const shOf=(it,k)=>it.sh!=null?it.sh:(k.dsh||0),stOf=(it,k)=>it.s!=null?it.s:(k.ds||0),zOf=(it,k)=>it.z!=null?it.z:(k.dz!=null?k.dz:2);
+const area=it=>it.w*it.h*(K[it.k].shp?AF[shOf(it,K[it.k])]:1);
+function shapePath(c,w,h,sh){
+  c.beginPath();
+  if(sh===1)c.roundRect(-w/2,-h/2,w,h,Math.min(.6,w*.25,h*.25));
+  else if(sh===2)c.ellipse(0,0,w/2,h/2,0,0,TAU);
+  else if(sh===3){c.moveTo(-w/2,-h/2);c.lineTo(0,-h/2);c.lineTo(0,0);c.lineTo(w/2,0);c.lineTo(w/2,h/2);c.lineTo(-w/2,h/2);c.closePath()}
+  else if(sh===4){const P=[[-.52,-.05],[-.42,-.55],[0,-.52],[.14,-.2],[.4,-.3],[.56,.1],[.4,.56],[-.2,.56],[-.5,.4]],n=P.length,m=i=>[(P[i%n][0]+P[(i+1)%n][0])/2*w,(P[i%n][1]+P[(i+1)%n][1])/2*h];
+    const a=m(0);c.moveTo(a[0],a[1]);for(let i=1;i<=n;i++){const q=m(i);c.quadraticCurveTo(P[i%n][0]*w,P[i%n][1]*h,q[0],q[1])}c.closePath()}
+  else if(sh===5){c.moveTo(-w/2,-h/2);c.lineTo(w/2,h/2);c.lineTo(-w/2,h/2);c.closePath()}
+  else if(sh===6){c.moveTo(-w/2,h/2);c.ellipse(0,h/2,w/2,h,0,Math.PI,TAU);c.closePath()}
+  else c.rect(-w/2,-h/2,w,h);
+}
+function pave(c,w,h,col,pat,zi,rnd){
+  c.fillStyle=col;c.fillRect(-w/2,-h/2,w,h);c.strokeStyle=shade(col,-32);c.lineWidth=.022;c.beginPath();
+  let tw=SZ[zi][1],th=SZ[zi][2];
+  if(pat===0){for(let x=-w/2+tw;x<w/2-.01;x+=tw){c.moveTo(x,-h/2);c.lineTo(x,h/2)}for(let y=-h/2+th;y<h/2-.01;y+=th){c.moveTo(-w/2,y);c.lineTo(w/2,y)}}
+  else if(pat===1||pat===4){if(pat===4){tw=.16;th=.12;c.lineWidth=.03}const k=Math.max(1,Math.sqrt(w*h/(tw*th)/8000));tw*=k;th*=k;
+    for(let y=-h/2,i=0;y<h/2;y+=th,i++){if(i){c.moveTo(-w/2,y);c.lineTo(w/2,y)}for(let x=-w/2+(i%2?tw/2:tw);x<w/2-.01;x+=tw){c.moveTo(x,y);c.lineTo(x,Math.min(y+th,h/2))}}}
+  else if(pat===2){const D=Math.hypot(w,h),W=Math.max(.1,Math.min(tw,th)/3,D/110),n=Math.ceil(D/2/W)+1;c.save();c.rotate(Math.PI/4);
+    for(let r=-n;r<=n;r++)for(let q=-n;q<=n;q++){const d=(((q-r)%4)+4)%4;if(d===0)c.rect(q*W,r*W,2*W,W);else if(d===3)c.rect(q*W,r*W,W,2*W)}c.restore()}
+  else{const g=Math.max(.75,Math.sqrt(w*h/1500)),nx=Math.ceil(w/g)+1,ny=Math.ceil(h/g)+1,P=[];c.lineWidth=.045;
+    for(let j=0;j<=ny;j++)for(let i=0;i<=nx;i++)P.push([-w/2+i*g+(rnd()-.5)*g*.6,-h/2+j*g+(rnd()-.5)*g*.6]);
+    for(let j=0;j<=ny;j++)for(let i=0;i<=nx;i++){const a=P[j*(nx+1)+i];if(i<nx){const b=P[j*(nx+1)+i+1];c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1])}
+      if(j<ny){const b=P[(j+1)*(nx+1)+i];c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);if(i<nx&&rnd()<.4){const d=P[(j+1)*(nx+1)+i+1];c.moveTo(a[0],a[1]);c.lineTo(d[0],d[1])}}}}
+  c.stroke();
+}
+function drawItem(c,k,it,w,h,rnd){
+  const col=k.fin?(k.fin[it.f]||k.fin[0])[1]:null;
+  if(k.shp&&!k.own){const sh=shOf(it,k);c.save();shapePath(c,w,h,sh);c.clip();k.d(c,w,h,col,rnd,it);c.restore();shapePath(c,w,h,sh);c.strokeStyle='rgba(40,34,24,.35)';c.lineWidth=.05;c.stroke()}
+  else k.d(c,w,h,col,rnd,it);
+}
+Object.assign(K.lawn,{shp:1,dsh:1,sl:'Mowing style',st:['Mown stripes','Checkerboard','Plain','Wildflower meadow'],d(c,w,h,col,rnd,it){
+  const s=stOf(it,K.lawn);c.fillStyle=col;c.fillRect(-w/2,-h/2,w,h);c.fillStyle='rgba(255,255,255,.1)';
+  if(s===0)for(let x=-w/2,i=0;x<w/2;x+=.7,i++){if(i%2)c.fillRect(x,-h/2,.7,h)}
+  else if(s===1)for(let x=-w/2,i=0;x<w/2;x+=.8,i++)for(let y=-h/2,j=0;y<h/2;y+=.8,j++){if((i+j)%2)c.fillRect(x,y,.8,.8)}
+  else if(s===3){const n=Math.min(700,w*h*9),P=['#f4f1e8','#e3b62f','#d9567a','#8d79c9'];for(let i=0;i<n;i++){const t=rnd();c.fillStyle=t<.5?shade(col,-26):P[i%4];c.beginPath();c.arc((rnd()-.5)*w,(rnd()-.5)*h,t<.5?.09:.05,0,TAU);c.fill()}}}});
+Object.assign(K.patio,{shp:1,pave:1,sl:'Laying pattern',st:PAT,d(c,w,h,col,rnd,it){pave(c,w,h,col,stOf(it,K.patio),zOf(it,K.patio),rnd)}});
+Object.assign(K.drive,{shp:1,pave:1,ds:2,dz:0,sl:'Laying pattern',st:PAT,d(c,w,h,col,rnd,it){pave(c,w,h,col,stOf(it,K.drive),zOf(it,K.drive),rnd)}});
+Object.assign(K.deck,{shp:1,sl:'Board direction',st:['Lengthways','Crossways','Diagonal'],d(c,w,h,col,rnd,it){
+  const s=stOf(it,K.deck),D=Math.hypot(w,h);c.fillStyle=col;c.fillRect(-w/2,-h/2,w,h);c.strokeStyle=shade(col,-28);c.lineWidth=.02;c.save();if(s)c.rotate(s===1?Math.PI/2:Math.PI/4);
+  c.beginPath();for(let y=-D/2;y<D/2;y+=.15){c.moveTo(-D/2,y);c.lineTo(D/2,y)}c.stroke();c.restore()}});
+Object.assign(K.gravel,{shp:1,dsh:1,sl:'Stone size',st:['Fine gravel','Pebbles','River cobbles'],d(c,w,h,col,rnd,it){
+  const s=stOf(it,K.gravel);c.fillStyle=s?shade(col,-22):col;c.fillRect(-w/2,-h/2,w,h);
+  if(!s){const n=Math.min(500,w*h*14);c.fillStyle=shade(col,-34);for(let i=0;i<n;i++)c.fillRect((rnd()-.5)*w,(rnd()-.5)*h,.05,.05);c.fillStyle=shade(col,24);for(let i=0;i<n/2;i++)c.fillRect((rnd()-.5)*w,(rnd()-.5)*h,.05,.05)}
+  else{const r=s===1?.07:.16,n=Math.min(900,w*h/(r*r*5));for(let i=0;i<n;i++){c.fillStyle=shade(col,Math.round((rnd()-.4)*50));c.beginPath();c.ellipse((rnd()-.5)*w,(rnd()-.5)*h,r*(.7+rnd()*.6),r*(.6+rnd()*.4),rnd()*3,0,TAU);c.fill()}}}});
+Object.assign(K.bed,{shp:1,dsh:1,d(c,w,h,col,rnd){c.fillStyle='#6f5540';c.fillRect(-w/2,-h/2,w,h);const n=Math.min(320,w*h*16),mix=col===BLOOM[0][1],P=['#d9567a','#e3b62f','#8d79c9','#f4f1e8'];
+  for(let i=0;i<n;i++){const x=(rnd()-.5)*(w-.2),y=(rnd()-.5)*(h-.2),t=rnd();c.fillStyle=t<.45?'#5c9650':(mix?P[i%4]:col);c.beginPath();c.arc(x,y,t<.45?.11:.07,0,TAU);c.fill()}}});
+Object.assign(K.pool,{shp:1,own:1,d(c,w,h,col,rnd,it){const sh=shOf(it,K.pool);shapePath(c,w,h,sh);c.fillStyle='#e6dfd0';c.fill();c.strokeStyle='#bdb4a0';c.lineWidth=.03;c.stroke();
+  c.save();c.scale(Math.max(.2,(w-.6)/w),Math.max(.2,(h-.6)/h));shapePath(c,w,h,sh);c.restore();const g=c.createLinearGradient(-w/2,0,w/2,0);g.addColorStop(0,shade(col,30));g.addColorStop(1,shade(col,-25));c.fillStyle=g;c.fill();
+  c.save();c.clip();c.strokeStyle='rgba(255,255,255,.4)';c.lineWidth=.04;c.beginPath();for(let y=-h/2+.9;y<h/2-.4;y+=.8)for(let x=-w/2+.8;x<w/2-1;x+=1.9){c.moveTo(x,y);c.quadraticCurveTo(x+.3,y-.15,x+.6,y)}c.stroke();
+  if(sh<2){c.fillStyle='rgba(255,255,255,.3)';for(let k=0;k<3;k++)c.fillRect(-w/2+.3,-h/2+.3,.9-k*.3,Math.min(1.6,h-.6))}c.restore()}});
+K.boulders={n:'Boulders',cat:'Features',w:1.6,h:1.4,d(c,w,h,col,rnd){[[-.2,.08,.3],[.2,-.14,.27],[.14,.26,.2]].forEach(([x,y,r])=>{const n=7,o=rnd()*TAU,P=[];for(let i=0;i<n;i++){const a=o+i/n*TAU,k=r*(.8+rnd()*.35);P.push([x*w+Math.cos(a)*k*w,y*h+Math.sin(a)*k*h])}
+  c.fillStyle='rgba(0,0,0,.2)';c.beginPath();P.forEach((p,i)=>i?c.lineTo(p[0]+.06,p[1]+.08):c.moveTo(p[0]+.06,p[1]+.08));c.fill();
+  c.fillStyle='#9a968e';c.beginPath();P.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.fill();c.strokeStyle='#6f6b64';c.lineWidth=.03;c.stroke();
+  c.fillStyle='#b9b5ac';c.beginPath();c.ellipse(x*w-r*w*.2,y*h-r*h*.2,r*w*.35,r*h*.3,0,0,TAU);c.fill()})}};
+K.wall={n:'Stone wall',cat:'Features',w:4,h:.4,fin:STONE,fl:'Stone',d(c,w,h,col){c.fillStyle=col;c.fillRect(-w/2,-h/2,w,h);c.strokeStyle=shade(col,-45);c.lineWidth=.03;c.beginPath();const L=w>=h,len=L?w:h;
+  for(let t=-len/2+.4;t<len/2-.05;t+=.4){L?(c.moveTo(t,-h/2),c.lineTo(t,h/2)):(c.moveTo(-w/2,t),c.lineTo(w/2,t))}c.stroke();c.strokeRect(-w/2,-h/2,w,h)}};
+function desc(it){const k=K[it.k],a=[];if(k.fin)a.push((k.fin[it.f]||k.fin[0])[0]);if(k.st){const s=stOf(it,k);a.push(k.st[s].toLowerCase());if(k.pave&&s<3)a.push(SZ[zOf(it,k)][0])}
+  if(k.shp){const sh=shOf(it,k);if(sh)a.push(SHAPES[sh].toLowerCase())}return a.join(', ')}
+
 const CATS=['Buildings','Surfaces','Planting','Features'];
 const TYPES={garden:'Garden landscaping',tinyhome:'Tiny home',carport:'Carport',garage:'Garage'};
 
@@ -303,7 +374,7 @@ let nid=1;
 function mk(k,x,y,o){return Object.assign({id:nid++,k:k,x:x,y:y,w:K[k].w,h:K[k].h,r:0,f:0},o||{})}
 function example(t){
   const E={
-   garden:{pw:18,pd:12,items:[mk('lawn',5,6,{w:8.5,h:10.5}),mk('patio',13.5,8.5,{w:8,h:6}),mk('pool',13,3,{w:7,h:3.5}),mk('bed',4.5,1.4,{w:7,h:1.1,f:3}),
+   garden:{pw:18,pd:12,items:[mk('lawn',5,6,{w:8.5,h:10.5,sh:4}),mk('patio',13.5,8.5,{w:8,h:6,s:1,z:3}),mk('pool',13,3,{w:7,h:3.5}),mk('bed',4.5,1.4,{w:7,h:1.1,f:3}),
      mk('dining',14.8,9.2),mk('pergola',14.8,9.2,{w:4,h:3.4}),mk('lounger',10.6,6.9),mk('lounger',11.6,6.9),mk('bbq',17,7.4,{r:90}),mk('firepit',6,7.2),
      mk('olive',1.9,9.9),mk('olive',7.5,10.2),mk('citrus',2,4.6),mk('palm',9,1.5),mk('palm',17,1.4,{w:2.4,h:2.4})]},
    tinyhome:{pw:14,pd:10,items:[mk('lawn',7,5,{w:13.2,h:9.2,f:1}),mk('deck',7,5.7,{w:5.4,h:2.4}),mk('path',7,8.4,{h:3}),mk('veg',2,7.5),mk('veg',3.6,7.5),
@@ -363,7 +434,7 @@ function paint(c,v,d,chrome){
   for(let y=0;y<=d.pd+.001;y++){c.strokeStyle=y%5?'rgba(70,60,40,.13)':'rgba(70,60,40,.3)';c.beginPath();c.moveTo(0,Math.round(y*s)+.5);c.lineTo(d.pw*s,Math.round(y*s)+.5);c.stroke()}
   // items
   d.items.forEach(it=>{const k=K[it.k];c.save();c.translate(it.x*s,it.y*s);c.rotate(it.r*Math.PI/180);c.scale(s,s);
-    k.d(c,it.w,it.h,k.fin?(k.fin[it.f]||k.fin[0])[1]:null,R(it.id*7919),it);c.restore()});
+    drawItem(c,k,it,it.w,it.h,R(it.id*7919));c.restore()});
   d.items.forEach(it=>{const k=K[it.k];if(!k.label)return;const fs=Math.max(9,Math.min(14,s*.42));if(Math.min(it.w,it.h)*s<fs*1.6&&Math.max(it.w,it.h)*s<60)return;
     c.font='600 '+fs+'px Barlow,system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';const t=k.n+'  '+it.w.toFixed(1)+' × '+it.h.toFixed(1)+' m';
     const tw=c.measureText(t).width+10;c.fillStyle='rgba(20,26,34,.72)';rr(c,it.x*s-tw/2,it.y*s-fs*.8,tw,fs*1.6,3);c.fill();c.fillStyle='#fff';c.fillText(t,it.x*s,it.y*s+.5)});
@@ -455,16 +526,18 @@ stage.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer&&e.dataTr
 
 /* ---------- panels ---------- */
 function thumb(k){const c=document.createElement('canvas'),g=c.getContext('2d'),d=K[k],dp=2;c.width=c.height=48*dp;const s=40*dp/Math.max(d.w,d.h,1);g.translate(24*dp,24*dp);g.scale(s,s);
-  d.d(g,d.w,Math.max(d.h,k==='fence'||k==='gate'?.3:d.h),d.fin?d.fin[0][1]:null,R(42),{});return c}
+  drawItem(g,d,{f:0},d.w,Math.max(d.h,/^(fence|gate|wall)$/.test(k)?.3:d.h),R(42));return c}
 function palette(){
   const cs=$('#cats');cs.textContent='';CATS.forEach(n=>{const b=document.createElement('button');b.type='button';b.textContent=n;b.setAttribute('aria-pressed',n===cat);b.onclick=()=>{cat=n;palette()};cs.appendChild(b)});
   const el=$('#items');el.textContent='';Object.keys(K).filter(k=>K[k].cat===cat).forEach(k=>{const b=document.createElement('button');b.type='button';b.appendChild(thumb(k));b.appendChild(document.createTextNode(K[k].n));b.onclick=()=>add(k);el.appendChild(b)});
 }
 function tabs(){const el=$('#tabs');el.textContent='';Object.keys(TYPES).forEach(t=>{const b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',t===cur);b.textContent=TYPES[t];
   b.onclick=()=>{cur=t;sel=null;cat=t==='garden'?'Surfaces':'Buildings';tabs();palette();layout();refresh()};el.appendChild(b)})}
+function fillSel(id,list,val,set){const e=$(id);e.parentElement.hidden=!list;if(!list)return;e.textContent='';list.forEach((n,i)=>{const o=document.createElement('option');o.value=i;o.textContent=n;e.appendChild(o)});e.value=val;e.onchange=()=>commit(()=>set(+e.value))}
+function opts(it,k){$('#stlab').textContent=k.sl||'Style';fillSel('#ish',k.shp?SHAPES:null,shOf(it,k),v=>{it.sh=v});fillSel('#ist',k.st||null,stOf(it,k),v=>{it.s=v});fillSel('#isz',k.pave&&stOf(it,k)<3?SZ.map(z=>z[0]):null,zOf(it,k),v=>{it.z=v})}
 function syncInputs(){const it=S();if(!it)return;const a=document.activeElement;[['iw',it.w.toFixed(1)],['ih',it.h.toFixed(1)],['ir',Math.round(it.r)]].forEach(([id,v])=>{const e=$('#'+id);if(e!==a)e.value=v})}
 const m2=v=>v.toFixed(v<10?1:0);
-function groups(){const g={};D().items.forEach(it=>{const k=K[it.k],fin=k.fin?(k.fin[it.f]||k.fin[0])[0]:'',key=it.k+'|'+it.w.toFixed(1)+'|'+it.h.toFixed(1)+'|'+fin;(g[key]=g[key]||{n:k.n,w:it.w,h:it.h,fin:fin,q:0}).q++});return Object.values(g)}
+function groups(){const g={};D().items.forEach(it=>{const k=K[it.k],fin=desc(it),key=it.k+'|'+it.w.toFixed(1)+'|'+it.h.toFixed(1)+'|'+fin;(g[key]=g[key]||{n:k.n,w:it.w,h:it.h,fin:fin,q:0}).q++});return Object.values(g)}
 function brief(){const d=D(),L=['365 Build & Design: design brief','Project: '+TYPES[cur],'Plot: '+d.pw+' × '+d.pd+' m ('+m2(d.pw*d.pd)+' m²)','','Schedule'];
   const gs=groups();if(!gs.length)L.push('- Nothing placed yet');gs.forEach(g=>L.push('- '+g.q+' × '+g.n+', '+g.w.toFixed(1)+' × '+g.h.toFixed(1)+' m'+(g.fin?', '+g.fin:'')));
   if(d.bg)L.push('','A site photo is attached under the plan.');if((d.notes||'').trim())L.push('','Notes',d.notes.trim());const t=L.join('\n');$('#brief').textContent=t;return t}
@@ -474,9 +547,9 @@ function ui(){
   if(document.activeElement!==$('#pw'))$('#pw').value=d.pw;if(document.activeElement!==$('#pd'))$('#pd').value=d.pd;
   $('#bgctl').hidden=!d.bg;$('#bgop').value=d.bgop||60;if(document.activeElement!==$('#notes'))$('#notes').value=d.notes||'';
   $('#nosel').hidden=!!it;$('#selbox').hidden=!it;$('#selname').textContent=it?K[it.k].n:'Selected item';
-  if(it){syncInputs();const k=K[it.k],fw=$('#fin');$('#finwrap').hidden=!k.fin;fw.textContent='';
+  if(it){syncInputs();const k=K[it.k],fw=$('#fin');opts(it,k);$('#finwrap').hidden=!k.fin;fw.textContent='';
     if(k.fin){$('#finname').textContent=k.fl+': '+(k.fin[it.f]||k.fin[0])[0];k.fin.forEach((f,i)=>{const b=document.createElement('button');b.type='button';b.style.background=f[1];b.title=f[0];b.setAttribute('aria-label',f[0]);b.setAttribute('aria-pressed',i===it.f);b.onclick=()=>commit(()=>{it.f=i});fw.appendChild(b)})}}
-  let bu=0,gr=0,hd=0,tr=0;d.items.forEach(i=>{const a=i.w*i.h,c=K[i.k].cat;if(c==='Buildings')bu+=a;else if(/^(lawn|bed|veg|hedge)$/.test(i.k))gr+=a;else if(/^(patio|deck|gravel|drive|path)$/.test(i.k))hd+=a;if(/^(tree|olive|citrus|palm)$/.test(i.k))tr++});
+  let bu=0,gr=0,hd=0,tr=0;d.items.forEach(i=>{const a=area(i),c=K[i.k].cat;if(c==='Buildings')bu+=a;else if(/^(lawn|bed|veg|hedge)$/.test(i.k))gr+=a;else if(/^(patio|deck|gravel|drive|path)$/.test(i.k))hd+=a;if(/^(tree|olive|citrus|palm)$/.test(i.k))tr++});
   const st=$('#stats');st.textContent='';[['Plot',m2(d.pw*d.pd)+' m²'],['Buildings',m2(bu)+' m²'],['Lawn and beds',m2(gr)+' m²'],['Paving and decking',m2(hd)+' m²'],['Trees',tr]].forEach(([l,v])=>{const e=document.createElement('div');const b=document.createElement('b');b.textContent=v;e.appendChild(b);e.appendChild(document.createTextNode(l));st.appendChild(e)});
   const tb=$('#sched');tb.textContent='';const gs=groups();if(!gs.length){const r=tb.insertRow();r.insertCell().textContent='Nothing on the plot yet. Add a building or surface to start the schedule.'}
   gs.forEach(g=>{const r=tb.insertRow();r.insertCell().textContent=g.n+(g.fin?' · '+g.fin:'');r.insertCell().textContent=g.w.toFixed(1)+' × '+g.h.toFixed(1);r.insertCell().textContent='× '+g.q});
