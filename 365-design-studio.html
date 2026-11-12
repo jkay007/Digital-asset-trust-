@@ -30,9 +30,10 @@ button,input,select,textarea{font:inherit;color:inherit}
 .band{flex:none;background:linear-gradient(108deg,var(--band) 0,var(--band) calc(100% - 270px),var(--accent) calc(100% - 270px));border-bottom:3px solid var(--accent);color:var(--band-ink);display:flex;align-items:center;flex-wrap:wrap;gap:0 20px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .brand{display:flex;align-items:center;gap:10px;padding-block:6px;min-width:0}
-.brand img{height:50px;width:auto;display:block;background:#fff;border-radius:50%;padding:2px}
-.brand span{font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.08em;text-transform:uppercase;line-height:1.15;white-space:nowrap}
-.brand small{display:block;font-family:var(--body);font-size:11.5px;letter-spacing:.02em;text-transform:none;color:var(--band-muted);font-weight:500}
+.brand img{height:72px;width:auto;display:block;background:#fff;border-radius:50%;padding:3px;margin-block:2px}
+.brand i{font-style:normal}
+.brand span{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:.08em;text-transform:uppercase;line-height:1.15;white-space:nowrap}
+.brand small{display:block;font-family:var(--body);font-size:13px;letter-spacing:.02em;text-transform:none;color:var(--band-muted);font-weight:500}
 .tabs{display:flex;gap:2px;overflow-x:auto;align-self:stretch;flex:1;min-width:0;scrollbar-width:none}
 .tabs button{border:0;background:transparent;color:var(--band-muted);font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:8px 13px;cursor:pointer;border-bottom:3px solid transparent;border-top:3px solid transparent;white-space:nowrap}
 .tabs button:hover{color:var(--band-ink)}
@@ -108,7 +109,9 @@ pre{white-space:pre-wrap;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;
 @media (max-width:860px){
   .brand small{display:none}
   .band{background:linear-gradient(108deg,var(--band) 0,var(--band) calc(100% - 180px),var(--accent) calc(100% - 180px))}
-  .brand img{height:40px}
+  .brand img{height:58px}
+  .brand i{display:block}
+  .brand span{font-size:14px}
   .tabs{order:3;flex-basis:calc(100% + 32px);margin-inline:-16px;padding-inline:16px;background:var(--band)}
   .tabs button{font-size:12.5px;padding:6px 10px}
   .work{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(250px,1fr) auto minmax(0,33%);gap:8px;padding-block:8px}
@@ -133,7 +136,7 @@ pre{white-space:pre-wrap;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;
 
 <div id="app">
   <header class="band">
-    <div class="brand"><img id="logo" alt="365 Build &amp; Design" width="56" height="50"><span>Design Studio<small>Plan it to scale, then send us the brief</small></span></div>
+    <div class="brand"><img id="logo" alt="365 Build &amp; Design logo" width="80" height="72"><span><i>365 Build</i> <i>&amp; Design</i><small>Design Studio</small></span></div>
     <div class="tabs" role="tablist" aria-label="Project type" id="tabs"></div>
     <div class="acts">
       <button class="btn ghost sm" id="undo" disabled>Undo</button>
