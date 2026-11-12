@@ -2,190 +2,221 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap">
 <style>
-/* Layout: a site-drawing workbench. Dark title band, then palette | scaled plot | schedule, stacking to one column on phones. */
+/* Layout: a one-screen site-drawing workbench. Dark title band; palette | zoomable plot | inspector. On phones the plot stays on top and the panels become a tabbed drawer. */
 :root{
-  --bg:#eceff2; --panel:#ffffff; --ink:#1b2430; --muted:#586472; --line:#d3d9e0;
+  --bg:#e9edf1; --panel:#ffffff; --ink:#1b2430; --muted:#586472; --line:#d3d9e0; --field:#f3f5f7;
   --accent:#d9480f; --accent-ink:#ffffff; --accent-soft:#fde8dc;
-  --band:#1b2430; --band-ink:#f2f4f6; --band-muted:#a9b3bf; --stage:#dde2e8; --danger:#b3261e;
+  --band:#1b2430; --band-ink:#f2f4f6; --band-muted:#a9b3bf; --band-line:#3a4553; --stage:#cfd6dd; --danger:#b3261e;
   --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
   --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#13171c; --panel:#1c222a; --ink:#edf0f3; --muted:#9ca7b3; --line:#303945;
+  --bg:#13171c; --panel:#1c222a; --ink:#edf0f3; --muted:#9ca7b3; --line:#303945; --field:#151a20;
   --accent:#ff7a33; --accent-ink:#1d0d03; --accent-soft:#3a2416;
-  --band:#0c0f13; --band-ink:#f2f4f6; --band-muted:#8f9aa6; --stage:#0e1216; --danger:#ff8a80; color-scheme:dark } }
+  --band:#0c0f13; --band-ink:#f2f4f6; --band-muted:#8f9aa6; --band-line:#2a323c; --stage:#0b0e12; --danger:#ff8a80; color-scheme:dark } }
 :root[data-theme="dark"]{
-  --bg:#13171c; --panel:#1c222a; --ink:#edf0f3; --muted:#9ca7b3; --line:#303945;
+  --bg:#13171c; --panel:#1c222a; --ink:#edf0f3; --muted:#9ca7b3; --line:#303945; --field:#151a20;
   --accent:#ff7a33; --accent-ink:#1d0d03; --accent-soft:#3a2416;
-  --band:#0c0f13; --band-ink:#f2f4f6; --band-muted:#8f9aa6; --stage:#0e1216; --danger:#ff8a80; color-scheme:dark }
+  --band:#0c0f13; --band-ink:#f2f4f6; --band-muted:#8f9aa6; --band-line:#2a323c; --stage:#0b0e12; --danger:#ff8a80; color-scheme:dark }
 
 *{box-sizing:border-box}
+html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#app{height:100%;min-height:600px;display:flex;flex-direction:column}
 
-.band{background:var(--band);color:var(--band-ink)}
-.wrap{max-width:1380px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:12px}
-.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
-.brand b{font-family:var(--display);font-weight:700;font-size:26px;line-height:1;background:var(--accent);color:var(--accent-ink);padding:5px 8px 4px;letter-spacing:.02em}
-.brand span{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:.06em;text-transform:uppercase;line-height:1.05}
-.brand small{display:block;font-family:var(--body);font-size:12px;letter-spacing:.04em;text-transform:none;color:var(--band-muted);font-weight:400}
-.acts{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:7px 12px;cursor:pointer;font-weight:500;white-space:nowrap}
-.btn:hover{border-color:var(--accent)}
-.btn:disabled{opacity:.45;cursor:default;border-color:var(--line)}
-.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
-.btn.ghost{background:transparent;border-color:#4a5563;color:var(--band-ink)}
-.btn.sm{padding:5px 9px;font-size:13px}
-.btn.del{color:var(--danger)}
-.tabs{display:flex;gap:2px;overflow-x:auto}
-.tabs button{border:0;background:transparent;color:var(--band-muted);font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px 10px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.band{flex:none;background:var(--band);color:var(--band-ink);display:flex;align-items:center;flex-wrap:wrap;gap:0 20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{display:flex;align-items:center;gap:10px;padding-block:10px;min-width:0}
+.brand b{font-family:var(--display);font-weight:700;font-size:24px;line-height:1;background:var(--accent);color:var(--accent-ink);padding:5px 8px 4px;letter-spacing:.02em}
+.brand span{font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:.06em;text-transform:uppercase;line-height:1.05;white-space:nowrap}
+.brand small{display:block;font-family:var(--body);font-size:11.5px;letter-spacing:.05em;text-transform:none;color:var(--band-muted);font-weight:400}
+.tabs{display:flex;gap:2px;overflow-x:auto;align-self:stretch;flex:1;min-width:0;scrollbar-width:none}
+.tabs button{border:0;background:transparent;color:var(--band-muted);font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.05em;text-transform:uppercase;padding:8px 14px;cursor:pointer;border-bottom:3px solid transparent;border-top:3px solid transparent;white-space:nowrap}
+.tabs button:hover{color:var(--band-ink)}
 .tabs button[aria-selected="true"]{color:var(--band-ink);border-bottom-color:var(--accent)}
+.acts{display:flex;gap:6px;margin-left:auto;padding-block:8px}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:5px;padding:7px 12px;cursor:pointer;font-weight:500;white-space:nowrap;line-height:1.2}
+.btn:hover{border-color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:default;border-color:var(--line)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn.ghost{background:transparent;border-color:var(--band-line);color:var(--band-ink)}
+.btn.ghost:disabled{border-color:var(--band-line)}
+.btn.sm{padding:5px 10px;font-size:13.5px}
+.del{color:var(--danger)}
 
-.grid{display:grid;grid-template-columns:220px minmax(0,1fr) 300px;gap:16px;padding-block:16px 40px;align-items:start}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;min-width:0}
-h2{font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px}
-.side{display:flex;flex-direction:column;gap:16px;min-width:0}
-.cats{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
-.cats button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 10px;font-size:13px;cursor:pointer}
+.work{flex:1;min-height:0;display:grid;grid-template-columns:250px minmax(0,1fr) 320px;grid-template-rows:auto minmax(0,1fr);gap:12px;padding-block:12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;min-width:0}
+h2{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.07em;text-transform:uppercase;margin:0 0 10px}
+.pal{grid-column:1;grid-row:1/3;overflow-y:auto}
+.side{grid-column:3;grid-row:1/3;overflow-y:auto;display:flex;flex-direction:column;gap:12px;min-width:0}
+.mtabs{display:none}
+.cats{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.cats button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 11px;font-size:13px;cursor:pointer}
 .cats button[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
-.items{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.items button{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--line);background:var(--bg);border-radius:4px;padding:6px 4px;cursor:pointer;font-size:12.5px;line-height:1.2;text-align:center}
-.items button:hover{border-color:var(--accent)}
-.items canvas{width:48px;height:48px}
-.hint{color:var(--muted);font-size:13px;margin:8px 0 0}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.items button{display:flex;flex-direction:column;align-items:center;gap:4px;border:1px solid var(--line);background:var(--field);border-radius:6px;padding:8px 4px 7px;cursor:pointer;font-size:12.5px;line-height:1.2;text-align:center;transition:transform .12s,border-color .12s}
+.items button:hover{border-color:var(--accent);transform:translateY(-1px)}
+.items button:active{transform:scale(.97)}
+.items canvas{width:56px;height:56px}
+.hint{color:var(--muted);font-size:13px;margin:10px 0 0}
 
-.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
-.bar label,.f label{font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;display:flex;flex-direction:column;gap:2px}
-input[type=number],input[type=text],textarea,select{border:1px solid var(--line);background:var(--bg);border-radius:4px;padding:5px 7px;width:100%;font-variant-numeric:tabular-nums}
-.bar input[type=number]{width:74px}
-.bar .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
-#stage{background:var(--stage);border-radius:4px;overflow:hidden;position:relative}
-#plan{display:block;width:100%;touch-action:none;cursor:default}
-.note{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--accent-soft);border-radius:4px;padding:7px 10px;font-size:13.5px;margin-bottom:10px}
-.note span{flex:1;min-width:180px}
+.toolbar{grid-column:2;grid-row:1;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.toolbar label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.toolbar input{width:68px}
+.toolbar .sp{margin-left:auto;display:flex;gap:6px}
+.f label{font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;display:flex;flex-direction:column;gap:3px}
+input[type=number],input[type=text],textarea,select{border:1px solid var(--line);background:var(--field);border-radius:5px;padding:6px 8px;width:100%;font-variant-numeric:tabular-nums;font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink)}
+#stage{grid-column:2;grid-row:2;position:relative;min-height:0;background:var(--stage);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+#plan{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab;outline:none}
+#stage:has(#plan:focus-visible){border-color:var(--accent)}
+.float{position:absolute;display:flex;gap:4px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px;box-shadow:0 4px 14px rgba(0,0,0,.14);max-width:calc(100% - 16px)}
+.float button{border:0;background:transparent;border-radius:5px;padding:6px 9px;cursor:pointer;font-size:13.5px;font-weight:500;white-space:nowrap;line-height:1.2}
+.float button:hover{background:var(--field)}
+#ctx{top:8px;left:8px;flex-wrap:wrap}
+.zoom{bottom:8px;right:8px}
+.zoom button{min-width:32px;font-size:16px}
+.zoom output{min-width:44px;text-align:center;font-size:13px;font-variant-numeric:tabular-nums;color:var(--muted)}
+#example{bottom:8px;left:8px;padding:4px 4px 4px 10px;font-size:13px;gap:8px;max-width:calc(100% - 190px)}
+#example button{background:var(--accent-soft)}
 
-.f{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.f{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
 .f .wide{grid-column:1/-1}
-.sw{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
-.sw button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
-.sw button[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--panel) inset}
-.row{display:flex;flex-wrap:wrap;gap:6px}
+.sw{display:flex;flex-wrap:wrap;gap:7px;margin:5px 0 2px}
+.sw button{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
+.sw button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--panel) inset}
 .up{display:flex;flex-direction:column;gap:8px}
 .up label.btn{text-align:center}
 .up input[type=file]{position:absolute;opacity:0;width:1px;height:1px}
 .up label.btn:focus-within{outline:2px solid var(--accent);outline-offset:2px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;margin-bottom:12px}
 .stats div{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 .stats b{display:block;font-family:var(--display);font-size:24px;color:var(--ink);letter-spacing:0;text-transform:none;font-variant-numeric:tabular-nums;line-height:1.1}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
-td{padding:4px 0;border-top:1px solid var(--line);vertical-align:top}
+td{padding:5px 0;border-top:1px solid var(--line);vertical-align:top}
 td:nth-child(2),td:nth-child(3){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:8px}
 textarea{resize:vertical;min-height:64px}
-pre{white-space:pre-wrap;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px;margin:8px 0;max-height:200px;overflow:auto;user-select:all}
-#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:8px 14px;border-radius:4px;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+pre{white-space:pre-wrap;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;background:var(--field);border:1px solid var(--line);border-radius:5px;padding:8px;margin:8px 0;max-height:180px;overflow:auto;user-select:all}
+#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:8px 14px;border-radius:5px;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
 
-@media (max-width:1040px){
-  .grid{grid-template-columns:minmax(0,1fr) 290px}
-  .pal{grid-column:1/-1}
-  .items{display:flex;overflow-x:auto;padding-bottom:4px}
-  .items button{flex:0 0 78px}
+@media (max-width:1100px){ .work{grid-template-columns:210px minmax(0,1fr) 280px} }
+@media (max-width:860px){
+  .brand small{display:none}
+  .tabs{order:3;flex-basis:100%}
+  .tabs button{font-size:16px;padding:5px 12px 6px}
+  .work{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(250px,1fr) auto minmax(0,33%);gap:8px;padding-block:8px}
+  .toolbar,#stage,.mtabs,.pal,.side{grid-column:1}
+  .toolbar{grid-row:1}#stage{grid-row:2}
+  .mtabs{grid-row:3;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px}
+  .mtabs button{border:0;background:transparent;border-radius:5px;padding:7px 4px;font-weight:600;font-size:14px;cursor:pointer;color:var(--muted)}
+  .mtabs button[aria-selected="true"]{background:var(--ink);color:var(--panel)}
+  .pal,.side{grid-row:4}
+  .work[data-tab="add"] .side{display:none}
+  .work:not([data-tab="add"]) .pal{display:none}
+  .side .pane{display:none}
+  .work[data-tab="edit"] .pane[data-pane="edit"],.work[data-tab="photos"] .pane[data-pane="photos"],.work[data-tab="brief"] .pane[data-pane="brief"]{display:block}
+  .toolbar label span{display:none}
+  .toolbar{flex-wrap:nowrap;gap:6px}
+  .toolbar input{width:54px;padding:5px 6px}
+  #example span{display:none}
+  .float button{padding:7px 8px}
 }
-@media (max-width:720px){
-  .grid{grid-template-columns:minmax(0,1fr)}
-  .brand span{font-size:17px}
-}
+@media (prefers-reduced-motion:reduce){ .items button{transition:none} }
 </style>
 
-<div class="band">
-  <div class="wrap">
-    <div class="top">
-      <div class="brand"><b>365</b><span>Build &amp; Design<small>Design Studio · plan it to scale, then send us the brief</small></span></div>
-      <div class="acts">
-        <button class="btn ghost" id="undo" disabled>Undo</button>
-        <button class="btn pri" id="savepng" hidden>Save plan as image</button>
-      </div>
-    </div>
+<div id="app">
+  <header class="band">
+    <div class="brand"><b>365</b><span>Build &amp; Design<small>Design Studio</small></span></div>
     <div class="tabs" role="tablist" aria-label="Project type" id="tabs"></div>
-  </div>
-</div>
+    <div class="acts">
+      <button class="btn ghost sm" id="undo" disabled>Undo</button>
+      <button class="btn ghost sm" id="redo" disabled>Redo</button>
+      <button class="btn pri sm" id="savepng" hidden>Save image</button>
+    </div>
+  </header>
 
-<div class="wrap grid">
-  <aside class="panel pal">
-    <h2>Add to plan</h2>
-    <div class="cats" id="cats"></div>
-    <div class="items" id="items"></div>
-    <p class="hint">Tap an item to drop it on the plot, then drag it into place. Select a surface to change its shape, material, laying pattern and slab size.</p>
-  </aside>
+  <div class="work" id="work" data-tab="add">
+    <aside class="panel pal">
+      <h2>Add to plan</h2>
+      <div class="cats" id="cats"></div>
+      <div class="items" id="items"></div>
+      <p class="hint">Tap an item to drop it on the plot, then drag it into place. Select a surface to change its shape, material, laying pattern and slab size.</p>
+    </aside>
 
-  <section class="panel">
-    <div class="note" id="example"><span>This is an example layout. Move anything around, or clear it and start from your own plot.</span><button class="btn sm" id="blank">Start with an empty plot</button></div>
-    <div class="bar">
-      <label for="pw">Plot width (m)<input id="pw" type="number" min="3" max="80" step="0.5"></label>
-      <label for="pd">Plot depth (m)<input id="pd" type="number" min="3" max="80" step="0.5"></label>
+    <div class="toolbar">
+      <label for="pw"><span>Plot</span> W <input id="pw" type="number" min="3" max="80" step="0.5" aria-label="Plot width in metres"></label>
+      <label for="pd">D <input id="pd" type="number" min="3" max="80" step="0.5" aria-label="Plot depth in metres"> m</label>
       <div class="sp">
-        <button class="btn sm" id="reset">Load example</button>
-        <button class="btn sm" id="clear">Clear plot</button>
-      </div>
-    </div>
-    <div id="stage"><canvas id="plan" tabindex="0" aria-label="Plot plan. Drag items to move them, use the corner handles to resize and the top handle to rotate."></canvas></div>
-    <p class="hint">Grid squares are 1 m. Corner handles resize, the round handle turns the item. Arrow keys nudge, Delete removes. You can also drop a picture straight onto the plot.</p>
-  </section>
-
-  <div class="side">
-    <div class="panel" id="insp">
-      <h2 id="selname">Selected item</h2>
-      <p class="hint" id="nosel" style="margin-top:0">Nothing selected. Tap an item on the plot to change its size, finish or position.</p>
-      <div id="selbox" hidden>
-        <div class="f">
-          <label for="iw">Width (m)<input id="iw" type="number" min="0.2" step="0.1"></label>
-          <label for="ih">Depth (m)<input id="ih" type="number" min="0.2" step="0.1"></label>
-          <label for="ir">Turn (°)<input id="ir" type="number" step="15"></label>
-        </div>
-        <div class="f">
-          <label class="wide" for="ish">Shape<select id="ish"></select></label>
-          <label class="wide" for="ist"><span id="stlab">Style</span><select id="ist"></select></label>
-          <label class="wide" for="isz">Slab size<select id="isz"></select></label>
-        </div>
-        <div id="finwrap"><div class="hint" style="margin:0" id="finname">Finish</div><div class="sw" id="fin"></div></div>
-        <div class="row">
-          <button class="btn sm" id="dup">Duplicate</button>
-          <button class="btn sm" id="fwd">Bring forward</button>
-          <button class="btn sm" id="back">Send back</button>
-          <button class="btn sm del" id="del">Remove</button>
-        </div>
+        <button class="btn sm" id="reset">Example</button>
+        <button class="btn sm" id="clear">Clear</button>
       </div>
     </div>
 
-    <div class="panel">
-      <h2>Your photos</h2>
-      <div class="up">
-        <label class="btn" for="bgfile">Upload a site photo or survey plan<input id="bgfile" type="file" accept="image/*"></label>
-        <div id="bgctl" hidden>
-          <label for="bgop" class="hint" style="margin:0">Photo strength under the plan</label>
-          <input id="bgop" type="range" min="10" max="100" step="5" style="width:100%">
-          <button class="btn sm" id="bgrm">Remove background photo</button>
-        </div>
-        <label class="btn" for="imgfile">Add pictures to the plot<input id="imgfile" type="file" accept="image/*" multiple></label>
+    <div id="stage">
+      <canvas id="plan" tabindex="0" aria-label="Plot plan. Drag items to move them, drag empty space to pan, scroll or pinch to zoom."></canvas>
+      <div class="float" id="ctx" hidden>
+        <button id="rot">Turn 90°</button><button id="dup">Duplicate</button><button id="fwd">Forward</button><button id="back">Back</button><button id="del" class="del">Remove</button>
       </div>
-      <p class="hint">A background photo sits under the grid so you can trace over your real site. Pictures become items you can move, resize and turn, such as a pool you like or a plant you want.</p>
+      <div class="float" id="example"><span>Example layout. Move anything, or</span><button id="blank">Start empty</button></div>
+      <div class="float zoom">
+        <button id="zout" aria-label="Zoom out">−</button><output id="zpct">100%</output><button id="zin" aria-label="Zoom in">+</button><button id="zfit" style="font-size:13.5px">Fit</button>
+      </div>
     </div>
 
-    <div class="panel">
-      <h2>Schedule</h2>
-      <div class="stats" id="stats"></div>
-      <table id="sched"></table>
-    </div>
+    <nav class="mtabs" id="mtabs" role="tablist" aria-label="Panels">
+      <button data-t="add" role="tab">Add</button><button data-t="edit" role="tab">Edit</button><button data-t="photos" role="tab">Photos</button><button data-t="brief" role="tab">Brief</button>
+    </nav>
 
-    <div class="panel">
-      <h2>Brief for the builder</h2>
-      <label for="notes" class="hint" style="margin:0 0 4px;display:block">Anything we should know? Budget, slope, access, must-haves.</label>
-      <textarea id="notes" placeholder="e.g. Plot slopes down to the south. Want shade over the dining area."></textarea>
-      <pre id="brief" tabindex="0"></pre>
-      <button class="btn pri" id="copy">Copy brief</button>
-      <p class="hint">Paste the brief into a message to 365 Build &amp; Design along with your saved plan image.</p>
-    </div>
+    <aside class="side">
+      <div class="panel pane" data-pane="edit">
+        <h2 id="selname">Selected item</h2>
+        <p class="hint" id="nosel" style="margin-top:0">Nothing selected. Tap an item on the plot to change its size, shape, material and finish.</p>
+        <div id="selbox" hidden>
+          <div class="f">
+            <label for="iw">Width (m)<input id="iw" type="number" min="0.2" step="0.1"></label>
+            <label for="ih">Depth (m)<input id="ih" type="number" min="0.2" step="0.1"></label>
+            <label for="ir">Turn (°)<input id="ir" type="number" step="15"></label>
+          </div>
+          <div class="f">
+            <label class="wide" for="ish">Shape<select id="ish"></select></label>
+            <label class="wide" for="ist"><span id="stlab">Style</span><select id="ist"></select></label>
+            <label class="wide" for="isz">Slab size<select id="isz"></select></label>
+          </div>
+          <div id="finwrap"><div class="hint" style="margin:0" id="finname">Finish</div><div class="sw" id="fin"></div></div>
+        </div>
+      </div>
+
+      <div class="panel pane" data-pane="photos">
+        <h2>Your photos</h2>
+        <div class="up">
+          <label class="btn" for="bgfile">Upload a site photo or survey plan<input id="bgfile" type="file" accept="image/*"></label>
+          <div id="bgctl" hidden>
+            <label for="bgop" class="hint" style="margin:0">Photo strength under the plan</label>
+            <input id="bgop" type="range" min="10" max="100" step="5" style="width:100%">
+            <button class="btn sm" id="bgrm">Remove background photo</button>
+          </div>
+          <label class="btn" for="imgfile">Add pictures to the plot<input id="imgfile" type="file" accept="image/*" multiple></label>
+        </div>
+        <p class="hint">A background photo sits under the grid so you can trace over your real site. Pictures become items you can move, resize and turn.</p>
+      </div>
+
+      <div class="panel pane" data-pane="brief">
+        <h2>Schedule</h2>
+        <div class="stats" id="stats"></div>
+        <table id="sched"></table>
+      </div>
+
+      <div class="panel pane" data-pane="brief">
+        <h2>Brief for the builder</h2>
+        <label for="notes" class="hint" style="margin:0 0 4px;display:block">Anything we should know? Budget, slope, access, must-haves.</label>
+        <textarea id="notes" placeholder="e.g. Plot slopes down to the south. Want shade over the dining area."></textarea>
+        <pre id="brief" tabindex="0"></pre>
+        <button class="btn pri" id="copy">Copy brief</button>
+        <p class="hint">Paste the brief into a message to 365 Build &amp; Design along with your saved plan image.</p>
+      </div>
+    </aside>
   </div>
 </div>
 <div id="toast" hidden role="status"></div>
@@ -335,8 +366,9 @@ function pave(c,w,h,col,pat,zi,rnd){
 function drawItem(c,k,it,w,h,rnd){
   const col=k.fin?(k.fin[it.f]||k.fin[0])[1]:null;
   if(k.shp&&!k.own){const sh=shOf(it,k);c.save();shapePath(c,w,h,sh);c.clip();k.d(c,w,h,col,rnd,it);c.restore();shapePath(c,w,h,sh);c.strokeStyle='rgba(40,34,24,.35)';c.lineWidth=.05;c.stroke()}
-  else k.d(c,w,h,col,rnd,it);
+  else{if(k.sd){c.fillStyle='rgba(0,0,0,.22)';c.fillRect(-w/2+.18,-h/2+.24,w,h)}k.d(c,w,h,col,rnd,it)}
 }
+['tinyhome','garage1','garage2','shed'].forEach(k=>{K[k].sd=1});
 Object.assign(K.lawn,{shp:1,dsh:1,sl:'Mowing style',st:['Mown stripes','Checkerboard','Plain','Wildflower meadow'],d(c,w,h,col,rnd,it){
   const s=stOf(it,K.lawn);c.fillStyle=col;c.fillRect(-w/2,-h/2,w,h);c.fillStyle='rgba(255,255,255,.1)';
   if(s===0)for(let x=-w/2,i=0;x<w/2;x+=.7,i++){if(i%2)c.fillRect(x,-h/2,.7,h)}
@@ -389,12 +421,12 @@ function example(t){
 const imgs={},els={};
 function imgEl(id){if(!id||!imgs[id])return null;if(!els[id]){const i=new Image();i.onload=draw;i.src=imgs[id];els[id]=i}return els[id]}
 let designs={},cur='garden',sel=null,cat='Buildings';
-const undo={};
+const undo={},redo={};
 const KEY='studio365.v1';
 (function load(){
   try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.designs){designs=s.designs;cur=TYPES[s.cur]?s.cur:'garden';Object.assign(imgs,s.imgs||{});
     Object.values(designs).forEach(d=>{d.items=d.items.filter(i=>K[i.k]);d.items.forEach(i=>{nid=Math.max(nid,i.id+1)})})}}catch(e){}
-  Object.keys(TYPES).forEach(t=>{if(!designs[t])designs[t]=example(t);undo[t]=[]});
+  Object.keys(TYPES).forEach(t=>{if(!designs[t])designs[t]=example(t);undo[t]=[];redo[t]=[]});
 })();
 const D=()=>designs[cur];
 const S=()=>D().items.find(i=>i.id===sel)||null;
@@ -405,76 +437,85 @@ function persist(){clearTimeout(saveT);saveT=setTimeout(()=>{
   try{localStorage.setItem(KEY,JSON.stringify({designs,cur,imgs}))}
   catch(e){try{localStorage.setItem(KEY,JSON.stringify({designs,cur,imgs:{}}));toast('Layout saved in this browser. Your pictures are too large to keep, so re-add them next visit.')}catch(e2){}}
 },400)}
-function undoUses(k){return Object.values(undo).some(st=>st.some(s=>s.indexOf('"'+k+'"')>=0))}
+function undoUses(k){return Object.values(undo).concat(Object.values(redo)).some(st=>st.some(s=>s.indexOf('"'+k+'"')>=0))}
 const snap=()=>JSON.stringify(D());
-function pushUndo(s){const st=undo[cur];st.push(s);if(st.length>60)st.shift();D().ex=false}
+function pushUndo(s){const st=undo[cur];st.push(s);if(st.length>60)st.shift();redo[cur].length=0;D().ex=false}
 function commit(fn){const s=snap();fn();if(snap()!==s)pushUndo(s);refresh()}
 function refresh(){persist();ui();draw()}
 
 /* ---------- view + rendering ---------- */
-const cv=$('#plan'),cx=cv.getContext('2d');
-let V={s:30,ox:0,oy:0,W:0,H:0};
+const cv=$('#plan'),cx=cv.getContext('2d'),stage=$('#stage'),work=$('#work');
+let V={s:30,ox:0,oy:0,W:600,H:400,dpr:1,f:30},view={z:1,cx:0,cy:0};
+function fit(){const d=D();view={z:1,cx:d.pw/2,cy:d.pd/2};layout()}
 function layout(){
-  const d=D(),W=cv.parentElement.clientWidth||600,pad=W<500?26:36,maxH=Math.max(300,Math.min(innerHeight*.72,720));
-  const s=Math.min((W-2*pad)/d.pw,(maxH-2*pad)/d.pd),H=Math.round(d.pd*s+2*pad),dpr=Math.min(window.devicePixelRatio||1,2.5);
-  V={s:s,ox:(W-d.pw*s)/2,oy:pad,W:W,H:H,dpr:dpr};
-  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.height=H+'px';
+  const d=D(),W=stage.clientWidth||600,H=stage.clientHeight||400,pad=W<500?30:46,dpr=Math.min(window.devicePixelRatio||1,2.5);
+  const f=Math.max(2,Math.min((W-2*pad)/d.pw,(H-2*pad)/d.pd)),s=f*view.z;
+  view.cx=Math.max(0,Math.min(d.pw,view.cx));view.cy=Math.max(0,Math.min(d.pd,view.cy));
+  V={s:s,ox:W/2-view.cx*s,oy:H/2-view.cy*s,W:W,H:H,dpr:dpr,f:f};
+  const cw=Math.round(W*dpr),ch=Math.round(H*dpr);if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch}
+  $('#zpct').textContent=Math.round(view.z*100)+'%';
 }
+function zoomAt(px,py,k){const wx=(px-V.ox)/V.s,wy=(py-V.oy)/V.s;view.z=Math.max(.5,Math.min(12,view.z*k));const s=V.f*view.z;view.cx=wx-(px-V.W/2)/s;view.cy=wy-(py-V.H/2)/s;layout();draw()}
 function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
 function paint(c,v,d,chrome){
   const s=v.s;
-  // ground
   c.save();c.translate(v.ox,v.oy);
-  c.fillStyle='#d9ceb4';c.fillRect(0,0,d.pw*s,d.pd*s);
+  c.save();c.shadowColor='rgba(0,0,0,.28)';c.shadowBlur=22;c.shadowOffsetY=5;c.fillStyle='#d9ceb4';c.fillRect(0,0,d.pw*s,d.pd*s);c.restore();
   const bg=imgEl(d.bg);
   if(bg&&bg.complete&&bg.naturalWidth){c.save();c.beginPath();c.rect(0,0,d.pw*s,d.pd*s);c.clip();c.globalAlpha=(d.bgop||60)/100;
     const k=Math.max(d.pw*s/bg.naturalWidth,d.pd*s/bg.naturalHeight),iw=bg.naturalWidth*k,ih=bg.naturalHeight*k;c.drawImage(bg,(d.pw*s-iw)/2,(d.pd*s-ih)/2,iw,ih);c.restore()}
   c.lineWidth=1;
   for(let x=0;x<=d.pw+.001;x++){c.strokeStyle=x%5?'rgba(70,60,40,.13)':'rgba(70,60,40,.3)';c.beginPath();c.moveTo(Math.round(x*s)+.5,0);c.lineTo(Math.round(x*s)+.5,d.pd*s);c.stroke()}
   for(let y=0;y<=d.pd+.001;y++){c.strokeStyle=y%5?'rgba(70,60,40,.13)':'rgba(70,60,40,.3)';c.beginPath();c.moveTo(0,Math.round(y*s)+.5);c.lineTo(d.pw*s,Math.round(y*s)+.5);c.stroke()}
-  // items
   d.items.forEach(it=>{const k=K[it.k];c.save();c.translate(it.x*s,it.y*s);c.rotate(it.r*Math.PI/180);c.scale(s,s);
     drawItem(c,k,it,it.w,it.h,R(it.id*7919));c.restore()});
   d.items.forEach(it=>{const k=K[it.k];if(!k.label)return;const fs=Math.max(9,Math.min(14,s*.42));if(Math.min(it.w,it.h)*s<fs*1.6&&Math.max(it.w,it.h)*s<60)return;
     c.font='600 '+fs+'px Barlow,system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';const t=k.n+'  '+it.w.toFixed(1)+' × '+it.h.toFixed(1)+' m';
     const tw=c.measureText(t).width+10;c.fillStyle='rgba(20,26,34,.72)';rr(c,it.x*s-tw/2,it.y*s-fs*.8,tw,fs*1.6,3);c.fill();c.fillStyle='#fff';c.fillText(t,it.x*s,it.y*s+.5)});
   c.strokeStyle=chrome.ink;c.lineWidth=2;c.strokeRect(0,0,d.pw*s,d.pd*s);
-  // dimensions
   c.fillStyle=chrome.muted;c.font='500 12px Barlow,system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';
   c.fillText(d.pw+' m',d.pw*s/2,-13);c.save();c.translate(-13,d.pd*s/2);c.rotate(-Math.PI/2);c.fillText(d.pd+' m',0,0);c.restore();
-  // scale bar
   const bl=d.pw>=12?5:2;c.fillStyle=chrome.ink;c.fillRect(d.pw*s-bl*s,d.pd*s+9,bl*s,3);c.textAlign='right';c.fillStyle=chrome.muted;c.fillText(bl+' m',d.pw*s-bl*s-6,d.pd*s+11);
   c.restore();
 }
 function corners(it){const a=it.r*Math.PI/180,co=Math.cos(a),si=Math.sin(a);const P=(lx,ly)=>({x:V.ox+(it.x+lx*co-ly*si)*V.s,y:V.oy+(it.y+lx*si+ly*co)*V.s});
-  const hw=it.w/2,hh=it.h/2;return{c:[P(-hw,-hh),P(hw,-hh),P(hw,hh),P(-hw,hh)],rot:P(0,-hh-26/V.s),top:P(0,-hh)}}
+  const hw=it.w/2,hh=it.h/2;return{c:[P(-hw,-hh),P(hw,-hh),P(hw,hh),P(-hw,hh)],rot:P(0,-hh-28/V.s),top:P(0,-hh)}}
 function draw(){
   const d=D();cx.setTransform(V.dpr,0,0,V.dpr,0,0);cx.fillStyle=css('--stage');cx.fillRect(0,0,V.W,V.H);
   paint(cx,V,d,{ink:css('--ink'),muted:css('--muted')});
   const it=S();if(it){const g=corners(it),ac=css('--accent');cx.strokeStyle=ac;cx.lineWidth=1.5;cx.beginPath();g.c.forEach((p,i)=>i?cx.lineTo(p.x,p.y):cx.moveTo(p.x,p.y));cx.closePath();cx.stroke();
     cx.beginPath();cx.moveTo(g.top.x,g.top.y);cx.lineTo(g.rot.x,g.rot.y);cx.stroke();
     cx.fillStyle='#fff';g.c.forEach(p=>{cx.fillRect(p.x-5,p.y-5,10,10);cx.strokeRect(p.x-5,p.y-5,10,10)});
-    cx.beginPath();cx.arc(g.rot.x,g.rot.y,6.5,0,TAU);cx.fillStyle=ac;cx.fill();cx.strokeStyle='#fff';cx.stroke()}
+    cx.beginPath();cx.arc(g.rot.x,g.rot.y,7,0,TAU);cx.fillStyle=ac;cx.fill();cx.strokeStyle='#fff';cx.stroke();
+    const t=it.w.toFixed(1)+' × '+it.h.toFixed(1)+' m',by=Math.max.apply(null,g.c.map(p=>p.y))+18,bx=(g.c[0].x+g.c[2].x)/2;cx.font='600 12px Barlow,system-ui,sans-serif';cx.textAlign='center';cx.textBaseline='middle';
+    const tw=cx.measureText(t).width+12;cx.fillStyle=ac;rr(cx,bx-tw/2,by-10,tw,20,4);cx.fill();cx.fillStyle=css('--accent-ink');cx.fillText(t,bx,by+.5)}
 }
 
-/* ---------- pointer interaction ---------- */
+/* ---------- pointer interaction: move, resize, turn, pan, pinch ---------- */
 const r1=v=>Math.round(v*10)/10;
 function pt(e){const b=cv.getBoundingClientRect();return{px:e.clientX-b.left,py:e.clientY-b.top}}
 function local(it,wx,wy){const a=-it.r*Math.PI/180,dx=wx-it.x,dy=wy-it.y;return{x:dx*Math.cos(a)-dy*Math.sin(a),y:dx*Math.sin(a)+dy*Math.cos(a)}}
 function hit(wx,wy){const its=D().items,m=10/V.s;for(let i=its.length-1;i>=0;i--){const it=its[i],l=local(it,wx,wy);if(Math.abs(l.x)<=Math.max(it.w/2,m)&&Math.abs(l.y)<=Math.max(it.h/2,m))return it}return null}
-let drag=null;
+const ptrs=new Map();let drag=null,pinch=null;
+function two(){const a=Array.from(ptrs.values());return{d:Math.hypot(a[0].px-a[1].px,a[0].py-a[1].py)||1,mx:(a[0].px+a[1].px)/2,my:(a[0].py+a[1].py)/2}}
 cv.addEventListener('pointerdown',e=>{
-  const p=pt(e),wx=(p.px-V.ox)/V.s,wy=(p.py-V.oy)/V.s,HR=e.pointerType==='touch'?20:11;let mode=null,ci=0,it=S();
+  const p=pt(e);ptrs.set(e.pointerId,p);try{cv.setPointerCapture(e.pointerId)}catch(_){}
+  if(ptrs.size===2){if(drag&&drag.before&&snap()!==drag.before)designs[cur]=JSON.parse(drag.before);drag=null;pinch=two();ui();draw();return}
+  if(ptrs.size>2)return;
+  const wx=(p.px-V.ox)/V.s,wy=(p.py-V.oy)/V.s,HR=e.pointerType==='touch'?20:11;let mode=null,ci=0,it=S();
   if(it){const g=corners(it);if(Math.hypot(p.px-g.rot.x,p.py-g.rot.y)<HR+2)mode='rot';else g.c.forEach((q,i)=>{if(!mode&&Math.hypot(p.px-q.x,p.py-q.y)<HR){mode='size';ci=i}})}
   if(!mode){it=hit(wx,wy);sel=it?it.id:null;if(it)mode='move';ui();draw()}
-  if(!mode)return;
-  cv.setPointerCapture(e.pointerId);cv.focus({preventScroll:true});
-  drag={mode:mode,ci:ci,it:it,o:Object.assign({},it),dx:wx-it.x,dy:wy-it.y,before:snap()};e.preventDefault();
+  e.preventDefault();cv.focus({preventScroll:true});
+  if(!mode){drag={mode:'pan',px:p.px,py:p.py};cv.style.cursor='grabbing';return}
+  drag={mode:mode,ci:ci,it:it,o:Object.assign({},it),dx:wx-it.x,dy:wy-it.y,before:snap(),moved:false};
 });
 cv.addEventListener('pointermove',e=>{
-  const p=pt(e),wx=(p.px-V.ox)/V.s,wy=(p.py-V.oy)/V.s;
-  if(!drag){const it=S();let c=hit(wx,wy)?'move':'default';if(it){const g=corners(it);if(Math.hypot(p.px-g.rot.x,p.py-g.rot.y)<12)c='grab';else if(g.c.some(q=>Math.hypot(p.px-q.x,p.py-q.y)<11))c='nwse-resize'}cv.style.cursor=c;return}
-  const it=drag.it,o=drag.o,d=D();
+  const p=pt(e);if(ptrs.has(e.pointerId))ptrs.set(e.pointerId,p);
+  if(pinch&&ptrs.size>=2){const t=two();view.cx-=(t.mx-pinch.mx)/V.s;view.cy-=(t.my-pinch.my)/V.s;layout();zoomAt(t.mx,t.my,t.d/pinch.d);pinch=t;return}
+  const wx=(p.px-V.ox)/V.s,wy=(p.py-V.oy)/V.s;
+  if(!drag){const it=S();let c=hit(wx,wy)?'move':'grab';if(it){const g=corners(it);if(Math.hypot(p.px-g.rot.x,p.py-g.rot.y)<12)c='crosshair';else if(g.c.some(q=>Math.hypot(p.px-q.x,p.py-q.y)<11))c='nwse-resize'}cv.style.cursor=c;return}
+  if(drag.mode==='pan'){view.cx-=(p.px-drag.px)/V.s;view.cy-=(p.py-drag.py)/V.s;drag.px=p.px;drag.py=p.py;layout();draw();return}
+  const it=drag.it,o=drag.o,d=D();drag.moved=true;
   if(drag.mode==='move'){it.x=Math.max(0,Math.min(d.pw,r1(wx-drag.dx)));it.y=Math.max(0,Math.min(d.pd,r1(wy-drag.dy)))}
   else if(drag.mode==='rot'){let a=Math.atan2(wy-o.y,wx-o.x)*180/Math.PI+90;a=Math.round(a/15)*15;it.r=((a%360)+360)%360}
   else{const l=local(o,wx,wy),sx=[-1,1,1,-1][drag.ci],sy=[-1,-1,1,1][drag.ci];
@@ -482,11 +523,17 @@ cv.addEventListener('pointermove',e=>{
     it.w=nw;it.h=nh;it.x=o.x+lx*Math.cos(a)-ly*Math.sin(a);it.y=o.y+lx*Math.sin(a)+ly*Math.cos(a)}
   syncInputs();draw();
 });
-function endDrag(){if(!drag)return;const b=drag.before;drag=null;if(snap()!==b){pushUndo(b);refresh()}}
+function endDrag(e){ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=null;if(!drag)return;const g=drag;drag=null;cv.style.cursor='grab';
+  if(g.mode==='pan')return;if(!g.moved&&e.type==='pointerup')setTab('edit');if(snap()!==g.before){pushUndo(g.before);refresh()}}
 cv.addEventListener('pointerup',endDrag);cv.addEventListener('pointercancel',endDrag);
+cv.addEventListener('wheel',e=>{e.preventDefault();const p=pt(e);zoomAt(p.px,p.py,Math.exp(-e.deltaY*(e.ctrlKey?.012:.0016)))},{passive:false});
+function setTab(t){work.dataset.tab=t;document.querySelectorAll('#mtabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t))}
+document.querySelectorAll('#mtabs button').forEach(b=>{b.onclick=()=>setTab(b.dataset.t)});
+$('#zin').onclick=()=>zoomAt(V.W/2,V.H/2,1.3);$('#zout').onclick=()=>zoomAt(V.W/2,V.H/2,1/1.3);$('#zfit').onclick=()=>{fit();draw()};
 cv.addEventListener('keydown',e=>{
-  const it=S();
-  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();doUndo();return}
+  const it=S(),z=(e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z';
+  if(z){e.preventDefault();e.shiftKey?doRedo():doUndo();return}
+  if(e.key==='+'||e.key==='='){zoomAt(V.W/2,V.H/2,1.3);return}if(e.key==='-'){zoomAt(V.W/2,V.H/2,1/1.3);return}if(e.key==='0'){fit();draw();return}
   if(!it)return;const st=e.shiftKey?1:.1,mv={ArrowLeft:[-st,0],ArrowRight:[st,0],ArrowUp:[0,-st],ArrowDown:[0,st]}[e.key];
   if(mv){e.preventDefault();commit(()=>{it.x=r1(it.x+mv[0]);it.y=r1(it.y+mv[1])})}
   else if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();remove()}
@@ -500,12 +547,14 @@ function add(k,o){commit(()=>{const d=D(),it=mk(k,r1(d.pw/2),r1(d.pd/2),o);it.w=
 function remove(){const it=S();if(!it)return;commit(()=>{D().items=D().items.filter(i=>i!==it);sel=null})}
 function dup(){const it=S();if(!it)return;commit(()=>{const n=Object.assign({},it,{id:nid++,x:Math.min(D().pw,it.x+.6),y:Math.min(D().pd,it.y+.6)});D().items.splice(D().items.indexOf(it)+1,0,n);sel=n.id})}
 function order(dir){const it=S();if(!it)return;commit(()=>{const a=D().items,i=a.indexOf(it),j=i+dir;if(j<0||j>=a.length)return;a[i]=a[j];a[j]=it})}
-function doUndo(){const st=undo[cur];if(!st.length)return;designs[cur]=JSON.parse(st.pop());if(!S())sel=null;layout();refresh()}
-$('#undo').onclick=doUndo;$('#del').onclick=remove;$('#dup').onclick=dup;$('#fwd').onclick=()=>order(1);$('#back').onclick=()=>order(-1);
+function swap(from,to){if(!from.length)return;to.push(snap());designs[cur]=JSON.parse(from.pop());if(!S())sel=null;layout();refresh()}
+function doUndo(){swap(undo[cur],redo[cur])}
+function doRedo(){swap(redo[cur],undo[cur])}
+$('#undo').onclick=doUndo;$('#redo').onclick=doRedo;$('#rot').onclick=()=>{const it=S();if(it)commit(()=>{it.r=(it.r+90)%360})};$('#del').onclick=remove;$('#dup').onclick=dup;$('#fwd').onclick=()=>order(1);$('#back').onclick=()=>order(-1);
 function wipe(){commit(()=>{D().items=[];D().bg=null;sel=null})}
 $('#clear').onclick=wipe;$('#blank').onclick=wipe;
-$('#reset').onclick=()=>{const s=snap();designs[cur]=example(cur);sel=null;undo[cur].push(s);layout();refresh()};
-['pw','pd'].forEach(id=>{$('#'+id).onchange=e=>{const v=Math.max(3,Math.min(80,parseFloat(e.target.value)||0));commit(()=>{D()[id]=v;D().items.forEach(i=>{i.x=Math.min(i.x,D().pw);i.y=Math.min(i.y,D().pd)})});layout();draw()}});
+$('#reset').onclick=()=>{const s=snap();designs[cur]=example(cur);sel=null;undo[cur].push(s);redo[cur].length=0;fit();refresh()};
+['pw','pd'].forEach(id=>{$('#'+id).onchange=e=>{const v=Math.max(3,Math.min(80,parseFloat(e.target.value)||0));commit(()=>{D()[id]=v;D().items.forEach(i=>{i.x=Math.min(i.x,D().pw);i.y=Math.min(i.y,D().pd)})});fit();draw()}});
 [['iw','w'],['ih','h'],['ir','r']].forEach(([id,p])=>{$('#'+id).onchange=e=>{const it=S();if(!it)return;let v=parseFloat(e.target.value);if(isNaN(v))return syncInputs();
   commit(()=>{it[p]=p==='r'?((v%360)+360)%360:Math.max(.2,Math.min(80,r1(v)))})}});
 $('#notes').oninput=e=>{D().notes=e.target.value;persist();brief()};
@@ -520,19 +569,18 @@ $('#bgfile').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)retu
 $('#imgfile').onchange=e=>{addPics(e.target.files);e.target.value=''};
 $('#bgop').oninput=e=>{D().bgop=+e.target.value;persist();draw()};
 $('#bgrm').onclick=()=>commit(()=>{D().bg=null});
-const stage=$('#stage');
 stage.addEventListener('dragover',e=>e.preventDefault());
 stage.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer&&e.dataTransfer.files.length)addPics(e.dataTransfer.files)});
 
 /* ---------- panels ---------- */
-function thumb(k){const c=document.createElement('canvas'),g=c.getContext('2d'),d=K[k],dp=2;c.width=c.height=48*dp;const s=40*dp/Math.max(d.w,d.h,1);g.translate(24*dp,24*dp);g.scale(s,s);
+function thumb(k){const c=document.createElement('canvas'),g=c.getContext('2d'),d=K[k],dp=2;c.width=c.height=56*dp;const s=46*dp/Math.max(d.w,d.h,1);g.translate(28*dp,28*dp);g.scale(s,s);
   drawItem(g,d,{f:0},d.w,Math.max(d.h,/^(fence|gate|wall)$/.test(k)?.3:d.h),R(42));return c}
 function palette(){
   const cs=$('#cats');cs.textContent='';CATS.forEach(n=>{const b=document.createElement('button');b.type='button';b.textContent=n;b.setAttribute('aria-pressed',n===cat);b.onclick=()=>{cat=n;palette()};cs.appendChild(b)});
   const el=$('#items');el.textContent='';Object.keys(K).filter(k=>K[k].cat===cat).forEach(k=>{const b=document.createElement('button');b.type='button';b.appendChild(thumb(k));b.appendChild(document.createTextNode(K[k].n));b.onclick=()=>add(k);el.appendChild(b)});
 }
 function tabs(){const el=$('#tabs');el.textContent='';Object.keys(TYPES).forEach(t=>{const b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',t===cur);b.textContent=TYPES[t];
-  b.onclick=()=>{cur=t;sel=null;cat=t==='garden'?'Surfaces':'Buildings';tabs();palette();layout();refresh()};el.appendChild(b)})}
+  b.onclick=()=>{cur=t;sel=null;cat=t==='garden'?'Surfaces':'Buildings';tabs();palette();fit();refresh()};el.appendChild(b)})}
 function fillSel(id,list,val,set){const e=$(id);e.parentElement.hidden=!list;if(!list)return;e.textContent='';list.forEach((n,i)=>{const o=document.createElement('option');o.value=i;o.textContent=n;e.appendChild(o)});e.value=val;e.onchange=()=>commit(()=>set(+e.value))}
 function opts(it,k){$('#stlab').textContent=k.sl||'Style';fillSel('#ish',k.shp?SHAPES:null,shOf(it,k),v=>{it.sh=v});fillSel('#ist',k.st||null,stOf(it,k),v=>{it.s=v});fillSel('#isz',k.pave&&stOf(it,k)<3?SZ.map(z=>z[0]):null,zOf(it,k),v=>{it.z=v})}
 function syncInputs(){const it=S();if(!it)return;const a=document.activeElement;[['iw',it.w.toFixed(1)],['ih',it.h.toFixed(1)],['ir',Math.round(it.r)]].forEach(([id,v])=>{const e=$('#'+id);if(e!==a)e.value=v})}
@@ -543,7 +591,7 @@ function brief(){const d=D(),L=['365 Build & Design: design brief','Project: '+T
   if(d.bg)L.push('','A site photo is attached under the plan.');if((d.notes||'').trim())L.push('','Notes',d.notes.trim());const t=L.join('\n');$('#brief').textContent=t;return t}
 function ui(){
   const d=D(),it=S();
-  $('#undo').disabled=!undo[cur].length;$('#example').hidden=!d.ex;
+  $('#undo').disabled=!undo[cur].length;$('#redo').disabled=!redo[cur].length;$('#ctx').hidden=!it;$('#example').hidden=!d.ex;
   if(document.activeElement!==$('#pw'))$('#pw').value=d.pw;if(document.activeElement!==$('#pd'))$('#pd').value=d.pd;
   $('#bgctl').hidden=!d.bg;$('#bgop').value=d.bgop||60;if(document.activeElement!==$('#notes'))$('#notes').value=d.notes||'';
   $('#nosel').hidden=!!it;$('#selbox').hidden=!it;$('#selname').textContent=it?K[it.k].n:'Selected item';
@@ -570,7 +618,7 @@ use.then(dl=>{if(!dl)return;const b=$('#savepng');b.hidden=false;b.onclick=()=>{
   c.toBlob(bl=>{if(!bl)return toast('Could not create the image. Try again.');dl.save({filename:'365-'+cur+'-plan.png',data:bl}).then(()=>toast('Plan saved'),e=>{if(e&&e.code==='declined')return;toast(e&&e.code==='rate_limited'?'A save is already waiting. Finish that one first.':'Saving is not available in this view.')})},'image/png')}});
 
 /* ---------- boot ---------- */
-tabs();palette();layout();ui();draw();
+tabs();palette();setTab('add');fit();ui();draw();
 new ResizeObserver(()=>{layout();draw()}).observe(stage);
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw)}catch(e){}
 new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
